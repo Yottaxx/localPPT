@@ -1,0 +1,3807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>固态电池综合报告：技术、政策与市场</title>
+    <style>
+      :root {
+        --font-scale: 1;
+        --density-scale: 1;
+        --bg-page: #f3f5fb;
+        --bg-card: #ffffff;
+        --bg-soft: #f7f8fc;
+        --border-card: #dbe1f1;
+        --border-subtle: rgba(219, 225, 241, 0.6);
+        --text-main: #111827;
+        --text-dim: #4b5563;
+        --text-subtle: #6b7280;
+        --accent-primary: #1a57d8;
+        --accent-secondary: #c45a00;
+        --radius-xl: 22px;
+        --radius-lg: 18px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+        --shadow-card: 0 32px 60px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.04);
+        --shadow-card-soft: 0 22px 35px rgba(15, 23, 42, 0.06), 0 8px 15px rgba(15, 23, 42, 0.03);
+        --max-width: 1320px;
+        --layout-gap: clamp(16px, 2.5vw, 32px);
+        --layout-padding: clamp(16px, 4vw, 48px);
+        --stage-max-width: 1620px;
+        --stage-width: 1280px;
+        --stage-height: 720px;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        background: var(--bg-page);
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+        color: var(--text-main);
+        background: var(--bg-page);
+        line-height: 1.5;
+        padding: clamp(16px, 3vh, 28px) clamp(20px, 5vw, 56px) calc(96px + clamp(16px, 3vh, 28px));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(18px, 3vh, 36px);
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        z-index: -2;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        background: radial-gradient(650px at 20% 15%, rgba(26, 87, 216, 0.18), transparent 55%),
+          radial-gradient(800px at 85% 15%, rgba(196, 90, 0, 0.12), transparent 60%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(243, 245, 251, 0.98) 100%);
+        mix-blend-mode: normal;
+      }
+
+      body::after {
+        background: url('data:image/svg+xml,%3Csvg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="160" height="160" fill="none"/%3E%3Ccircle cx="80" cy="80" r="0.6" fill="%23c8d2ef" fill-opacity="0.35"/%3E%3C/svg%3E');
+        opacity: 0.65;
+        filter: blur(0.2px);
+      }
+
+      body.fullscreen-active {
+        padding: clamp(8px, 1.8vh, 18px) clamp(12px, 3vw, 32px);
+        gap: clamp(8px, 1.8vh, 20px);
+      }
+
+      .slide-deck-container {
+        width: 100%;
+        max-width: var(--max-width);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .slide-stage {
+        position: relative;
+        width: min(100%, var(--stage-max-width));
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+        margin: 0 auto;
+        transition: width 0.35s ease, height 0.35s ease;
+      }
+
+      body.fullscreen-active .slide-deck-container {
+        max-width: 100%;
+      }
+
+      body.fullscreen-active .slide-stage {
+        width: 100%;
+        max-width: none;
+      }
+
+      .slide-page {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: calc(clamp(16px, 2.6vw, 28px) * var(--density-scale));
+        padding: calc(clamp(24px, 4vw, 44px) * var(--density-scale));
+        border-radius: var(--radius-xl);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.9));
+        border: 1px solid var(--border-card);
+        box-shadow: var(--shadow-card);
+        overflow: hidden;
+        overflow-y: auto;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.35s ease, transform 0.4s ease;
+        visibility: hidden;
+      }
+
+      .slide-page > header,
+      .slide-page > footer {
+        flex-shrink: 0;
+      }
+
+      .slide-page > main {
+        flex: 1;
+        min-height: 0;
+      }
+
+      .slide-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(120% 140% at 30% -10%, rgba(26, 87, 216, 0.08), transparent),
+          radial-gradient(120% 140% at 90% -10%, rgba(196, 90, 0, 0.06), transparent);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      .slide-page.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+        visibility: visible;
+      }
+
+      /* 封面页样式 */
+      .cover-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: calc(clamp(40px, 6vw, 80px) * var(--density-scale));
+      }
+
+      .cover-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        gap: calc(clamp(24px, 4vw, 48px) * var(--density-scale));
+      }
+
+      .cover-decoration-top,
+      .cover-decoration-bottom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 87, 216, 0.08) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .cover-decoration-top {
+        top: 0;
+        transform: rotate(180deg);
+      }
+
+      .cover-decoration-bottom {
+        bottom: 0;
+      }
+
+      .cover-main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: calc(clamp(20px, 3vw, 36px) * var(--density-scale));
+        text-align: center;
+        z-index: 1;
+      }
+
+      .cover-eyebrow {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: clamp(calc(14px * var(--font-scale)), 1.8vw, calc(18px * var(--font-scale)));
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        color: var(--accent-primary);
+        text-transform: uppercase;
+        opacity: 0.85;
+      }
+
+      .cover-title {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: clamp(calc(36px * var(--font-scale)), 5vw, calc(64px * var(--font-scale)));
+        font-weight: 800;
+        color: var(--text-main);
+        line-height: 1.3;
+        letter-spacing: 0.02em;
+        margin: 0;
+        text-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+      }
+
+      .cover-divider {
+        width: clamp(120px, 18vw, 200px);
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent-primary) 20%,
+          var(--accent-primary) 80%,
+          transparent
+        );
+        border-radius: 2px;
+        margin: calc(clamp(8px, 1.2vw, 16px) * var(--density-scale)) 0;
+        opacity: 0.6;
+      }
+
+      .cover-subtitle {
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+        font-size: clamp(calc(18px * var(--font-scale)), 2.5vw, calc(32px * var(--font-scale)));
+        font-weight: 600;
+        color: var(--text-dim);
+        letter-spacing: 0.1em;
+        margin-top: calc(clamp(12px, 2vw, 24px) * var(--density-scale));
+      }
+
+      /* 尾页样式 */
+      .end-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: calc(clamp(40px, 6vw, 80px) * var(--density-scale));
+      }
+
+      .end-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        gap: calc(clamp(24px, 4vw, 48px) * var(--density-scale));
+      }
+
+      .end-decoration-top,
+      .end-decoration-bottom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 87, 216, 0.06) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .end-decoration-top {
+        top: 0;
+        transform: rotate(180deg);
+      }
+
+      .end-decoration-bottom {
+        bottom: 0;
+      }
+
+      .end-main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: calc(clamp(16px, 2.5vw, 28px) * var(--density-scale));
+        text-align: center;
+        z-index: 1;
+      }
+
+      .end-title {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: clamp(calc(48px * var(--font-scale)), 6.5vw, calc(96px * var(--font-scale)));
+        font-weight: 800;
+        color: var(--accent-primary);
+        line-height: 1.2;
+        letter-spacing: 0.05em;
+        margin: 0;
+        text-shadow: 0 4px 12px rgba(26, 87, 216, 0.15);
+      }
+
+      .end-subtitle {
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+        font-size: clamp(calc(16px * var(--font-scale)), 2.2vw, calc(28px * var(--font-scale)));
+        font-weight: 500;
+        color: var(--text-subtle);
+        letter-spacing: 0.08em;
+        margin-top: calc(clamp(8px, 1.2vw, 16px) * var(--density-scale));
+      }
+
+      .slide-page:focus-within {
+        outline: 2px solid rgba(26, 87, 216, 0.4);
+        outline-offset: 6px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .slide-header,
+      .page-head {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
+      }
+
+      .slide-header::after,
+      .page-head::after {
+        content: "";
+        height: 1px;
+        width: 100%;
+        background: linear-gradient(90deg, rgba(26, 87, 216, 0.18), rgba(255, 255, 255, 0));
+        margin-top: 8px;
+      }
+
+      .eyebrow {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(12px * var(--font-scale));
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-subtle);
+        font-weight: 600;
+      }
+
+      .title,
+      .page-title {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(22px * var(--font-scale));
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: 0.01em;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .subtitle,
+      .page-desc,
+      .page-sub {
+        font-size: calc(13px * var(--font-scale));
+        color: var(--text-dim);
+        max-width: 1080px;
+      }
+
+      .content-grid,
+      .grid-2x2,
+      .rows-grid,
+      .main-grid,
+      .region-row,
+      .scenario-card,
+      .topic-card,
+      .section-card,
+      .challenge-card {
+        position: relative;
+        z-index: 1;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 360px) 1fr;
+        gap: clamp(20px, 3vw, 32px);
+        min-height: 0;
+        align-content: stretch;
+        overflow: hidden;
+      }
+
+      #page-1 .content-grid {
+        grid-template-columns: minmax(480px, 1.2fr) minmax(380px, 1fr);
+        gap: clamp(24px, 3.5vw, 36px);
+      }
+
+      #page-1 .cq-history-timeline {
+        gap: calc(12px * var(--density-scale));
+        padding-left: calc(18px * var(--density-scale));
+      }
+
+      #page-1 .cq-history-item {
+        gap: calc(10px * var(--density-scale));
+      }
+
+      #page-1 .cq-history-title,
+      #page-1 .cq-history-year {
+        font-size: calc(16px * var(--font-scale));
+        line-height: 1.5;
+      }
+
+      #page-1 .cq-history-desc {
+        font-size: calc(15.5px * var(--font-scale));
+        line-height: 1.6;
+        margin-top: 4px;
+      }
+
+      #page-1 .cq-history-timeline {
+        gap: calc(16px * var(--density-scale));
+      }
+
+      #page-1 .cq-history-item {
+        gap: calc(12px * var(--density-scale));
+      }
+
+      #page-1 .section-body {
+        padding: calc(14px * var(--density-scale)) calc(16px * var(--density-scale));
+      }
+
+      #page-6 .content-grid,
+      #page-7 .content-grid {
+        grid-template-columns: minmax(320px, 420px) 1fr;
+        align-items: stretch;
+      }
+
+      #page-6 .key-points-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      #page-6 .section-block {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      #page-6 .key-points-card .section-block {
+        height: 100%;
+        justify-content: flex-start;
+      }
+
+      #page-6 .section-text,
+      #page-6 .hero-list {
+        flex: 1;
+        min-height: 0;
+      }
+
+      .content-grid > * {
+        min-height: 0;
+      }
+
+      .highlight-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: calc(clamp(18px, 3vw, 28px) * var(--density-scale));
+        margin-bottom: calc(clamp(4px, 1vw, 12px) * var(--density-scale));
+      }
+
+      .metric-card {
+        position: relative;
+        padding: calc(clamp(18px, 2.8vw, 26px) * var(--density-scale));
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, rgba(26, 87, 216, 0.08), rgba(255, 255, 255, 0.95));
+        border: 1px solid rgba(26, 87, 216, 0.15);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        display: grid;
+        gap: 10px;
+      }
+
+      .metric-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(160deg, rgba(255, 255, 255, 0.25), transparent 60%);
+        pointer-events: none;
+      }
+
+      .metric-label {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(13px * var(--font-scale));
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-primary);
+      }
+
+      .metric-value {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(24px * var(--font-scale));
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: 0.01em;
+      }
+
+      .metric-desc {
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-dim);
+        line-height: 1.55;
+        max-width: calc(320px * var(--density-scale));
+      }
+
+      .insight-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: calc(clamp(16px, 2.4vw, 24px) * var(--density-scale));
+        margin-bottom: calc(clamp(8px, 1.8vw, 20px) * var(--density-scale));
+      }
+
+      .insight-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(26, 87, 216, 0.05));
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(219, 225, 241, 0.8);
+        padding: calc(clamp(16px, 2.6vw, 24px) * var(--density-scale));
+        display: grid;
+        gap: calc(10px * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+      }
+
+      .insight-title {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(14px * var(--font-scale));
+        font-weight: 600;
+        color: var(--text-main);
+      }
+
+      .insight-body {
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-dim);
+        line-height: 1.55;
+      }
+
+      .insight-body strong {
+        color: var(--text-main);
+      }
+
+      .badge-stack {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .hero-list {
+        margin-top: calc(12px * var(--density-scale));
+        display: grid;
+        gap: calc(8px * var(--density-scale));
+        list-style: disc;
+        padding-left: calc(20px * var(--density-scale));
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-dim);
+      }
+
+      .hero-list li {
+        line-height: 1.6;
+      }
+
+      /* -- Chongqing deck additions ------------------------------------ */
+
+      .cq-history-timeline {
+        position: relative;
+        display: grid;
+        gap: calc(14px * var(--density-scale));
+        padding-left: calc(20px * var(--density-scale));
+      }
+
+      .cq-history-timeline::before {
+        content: "";
+        position: absolute;
+        inset: calc(6px * var(--density-scale)) auto calc(6px * var(--density-scale)) 6px;
+        width: 2px;
+        background: linear-gradient(180deg, rgba(26, 87, 216, 0.25), rgba(26, 87, 216, 0.05));
+      }
+
+      .cq-history-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: calc(10px * var(--density-scale));
+        align-items: flex-start;
+      }
+
+      .cq-history-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-primary);
+        box-shadow: 0 0 0 4px rgba(26, 87, 216, 0.12);
+        margin-top: calc(6px * var(--density-scale));
+      }
+
+      .cq-history-title,
+      .cq-history-year {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(13px * var(--font-scale));
+      }
+
+      .cq-history-title {
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .cq-history-year {
+        font-weight: 600;
+        color: var(--text-subtle);
+      }
+
+      .cq-history-desc {
+        grid-column: 2 / -1;
+        color: #1f2937;
+        font-size: calc(12.5px * var(--font-scale));
+        line-height: 1.55;
+      }
+
+      .cq-history-gallery {
+        display: grid;
+        grid-template-rows: repeat(1, minmax(0, 1.2));
+        gap: calc(12px * var(--density-scale));
+        min-height: 0;
+        height: 80%;
+      }
+
+      .cq-history-photo {
+        position: relative;
+        border-radius: 18px;
+        border: 1px solid var(--border-subtle);
+        background: #f3f5fb;
+        overflow: hidden;
+        min-height: 0;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .cq-history-visual {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: saturate(0.92);
+        width: 100%;
+        height: 100%;
+      }
+
+      .cq-history-visual img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .cq-history-visual--a {
+        background-image: linear-gradient(135deg, rgba(17, 24, 39, 0.15), rgba(37, 99, 235, 0.4));
+      }
+
+      .cq-history-visual--b {
+        background-image: linear-gradient(135deg, rgba(15, 118, 110, 0.2), rgba(8, 47, 73, 0.45));
+      }
+
+      .cq-history-caption {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        border-radius: 999px;
+        padding: 6px 12px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--border-subtle);
+        font-size: calc(11px * var(--font-scale));
+        color: #334155;
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        text-align: center;
+      }
+
+      .cq-overview-layout {
+        display: grid;
+        grid-template-columns: minmax(320px, 1fr) minmax(320px, 1.1fr);
+        gap: calc(clamp(18px, 3vw, 32px) * var(--density-scale));
+        align-items: start;
+      }
+
+      #page-2 .cq-overview-layout {
+        grid-template-columns: 1fr;
+        gap: calc(clamp(20px, 2.5vw, 28px) * var(--density-scale));
+      }
+
+      .cq-overview-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: calc(16px * var(--density-scale));
+      }
+
+      #page-2 .cq-overview-cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: calc(14px * var(--density-scale));
+        align-items: stretch;
+      }
+
+      .cq-overview-card {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(219, 225, 241, 0.85);
+        border-radius: var(--radius-lg);
+        padding: calc(18px * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+        display: grid;
+        gap: calc(10px * var(--density-scale));
+      }
+
+      #page-2 .cq-overview-card {
+        padding: calc(14px * var(--density-scale)) calc(16px * var(--density-scale));
+        gap: calc(8px * var(--density-scale));
+      }
+
+      .cq-overview-card h3 {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(16px * var(--font-scale));
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      #page-2 .cq-overview-card h3 {
+        font-size: calc(14.5px * var(--font-scale));
+        line-height: 1.3;
+      }
+
+      .cq-overview-card p {
+        font-size: calc(13px * var(--font-scale));
+        color: var(--text-dim);
+        line-height: 1.6;
+      }
+
+      #page-2 .cq-overview-card p {
+        font-size: calc(11.5px * var(--font-scale));
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      #page-2 .cq-overview-layout {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #page-2 .cq-overview-layout > section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      #page-2 .section-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: calc(20px * var(--density-scale)) calc(22px * var(--density-scale));
+      }
+
+      #page-2 .cq-overview-cards {
+        flex: 1;
+        height: 100%;
+        gap: calc(20px * var(--density-scale));
+      }
+
+      #page-2 .cq-overview-card {
+        padding: calc(22px * var(--density-scale)) calc(24px * var(--density-scale));
+        gap: calc(14px * var(--density-scale));
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      #page-2 .cq-overview-card h3 {
+        font-size: calc(21px * var(--font-scale));
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+
+      #page-2 .cq-overview-card p {
+        font-size: calc(16.5px * var(--font-scale));
+        line-height: 1.8;
+      }
+
+      #page-2 .section-head {
+        margin-bottom: calc(14px * var(--density-scale));
+      }
+
+      #page-2 .section-title {
+        font-size: calc(20px * var(--font-scale));
+      }
+
+      #page-2 .cq-overview-chip {
+        font-size: calc(14px * var(--font-scale));
+      }
+
+      .cq-overview-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: rgba(26, 87, 216, 0.08);
+        color: var(--accent-primary);
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(12px * var(--font-scale));
+        border: 1px solid rgba(26, 87, 216, 0.18);
+      }
+
+      .cq-overview-media {
+        position: relative;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        border: 1px solid rgba(219, 225, 241, 0.8);
+        min-height: clamp(260px, 32vw, 380px);
+        max-height: 100%;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.55), rgba(37, 99, 235, 0.45));
+        box-shadow: var(--shadow-card);
+      }
+
+      .cq-overview-media img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        opacity: 0.82;
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .cq-overview-overlay {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(219, 225, 241, 0.85);
+        padding: 10px 14px;
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-main);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18);
+      }
+
+      .cq-cluster-grid {
+        display: grid;
+        gap: calc(14px * var(--density-scale));
+      }
+
+      #page-3 .cq-cluster-grid {
+        display: flex;
+        flex-direction: column;
+        gap: calc(14px * var(--density-scale));
+        height: 100%;
+        min-height: 0;
+      }
+
+      /* 顶部三个主要集群横向排列的容器 */
+      #page-3 .cq-cluster-grid-top {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: calc(14px * var(--density-scale));
+        min-height: 0;
+        flex: 1;
+      }
+
+      /* 底部两个新星集群横向排列的容器 */
+      #page-3 .cq-cluster-grid-bottom {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(14px * var(--density-scale));
+        min-height: 0;
+        flex: 1;
+      }
+
+      .cq-cluster-subgrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: calc(14px * var(--density-scale));
+      }
+
+      #page-3 .cq-cluster-subgrid {
+        display: none;
+      }
+
+      .cq-cluster-card {
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid rgba(219, 225, 241, 0.85);
+        border-radius: 20px;
+        padding: calc(16px * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+        display: grid;
+        gap: calc(12px * var(--density-scale));
+      }
+
+      /* 第三页卡片风格统一为整体HTML风格 */
+      #page-3 .cq-cluster-card {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: calc(clamp(18px, 2.6vw, 26px) * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+        backdrop-filter: blur(3px);
+      }
+
+      /* 万亿级 - 最大最突出 */
+      #page-3 .cq-cluster-card:nth-of-type(1) {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-left: 4px solid rgba(26, 87, 216, 0.4);
+        padding: calc(clamp(20px, 2.8vw, 28px) * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(1) .cq-cluster-chip {
+        background: rgba(26, 87, 216, 0.08);
+        border-color: rgba(26, 87, 216, 0.16);
+        color: var(--accent-primary);
+        font-size: calc(20px * var(--font-scale)) !important;
+        font-weight: 800;
+        padding: 8px 16px !important;
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(1) .cq-cluster-title {
+        font-size: calc(18px * var(--font-scale)) !important;
+        font-weight: 800;
+        color: #0b1b52;
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(1) .cq-cluster-item {
+        font-size: clamp(calc(12px * var(--font-scale)), 3vw, calc(17px * var(--font-scale))) !important;
+        font-weight: 600;
+        padding: calc(14px * var(--density-scale)) calc(12px * var(--density-scale)) !important;
+        background: rgba(250, 251, 255, 0.95);
+        border: 1px solid rgba(219, 225, 241, 0.9) !important;
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+      }
+
+      /* 五千亿级 - 中等突出 */
+      #page-3 .cq-cluster-card:nth-of-type(2) {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-left: 4px solid rgba(196, 90, 0, 0.35);
+        padding: calc(clamp(20px, 2.8vw, 28px) * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(2) .cq-cluster-chip {
+        background: rgba(196, 90, 0, 0.12);
+        border-color: rgba(196, 90, 0, 0.2);
+        color: var(--accent-secondary);
+        font-size: calc(18px * var(--font-scale)) !important;
+        font-weight: 800;
+        padding: 7px 14px !important;
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(2) .cq-cluster-title {
+        font-size: calc(16.5px * var(--font-scale)) !important;
+        font-weight: 800;
+        color: #0b1b52;
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(2) .cq-cluster-item {
+        font-size: clamp(calc(11.5px * var(--font-scale)), 2.8vw, calc(16px * var(--font-scale))) !important;
+        font-weight: 600;
+        padding: calc(12px * var(--density-scale)) calc(10px * var(--density-scale)) !important;
+        background: rgba(250, 251, 255, 0.95);
+        border: 1px solid rgba(219, 225, 241, 0.9) !important;
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+      }
+
+      /* 千亿级 - 标准样式 */
+      #page-3 .cq-cluster-card:nth-of-type(3) {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-left: 4px solid rgba(15, 118, 110, 0.3);
+        padding: calc(clamp(18px, 2.6vw, 26px) * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(3) .cq-cluster-chip {
+        background: rgba(26, 87, 216, 0.08);
+        border-color: rgba(26, 87, 216, 0.16);
+        color: var(--accent-primary);
+        font-size: calc(16px * var(--font-scale)) !important;
+        font-weight: 800;
+        padding: 6px 12px !important;
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(3) .cq-cluster-title {
+        font-size: calc(15px * var(--font-scale)) !important;
+        font-weight: 700;
+        color: #0b1b52;
+      }
+
+      #page-3 .cq-cluster-card:nth-of-type(3) .cq-cluster-item {
+        font-size: clamp(calc(11px * var(--font-scale)), 2.5vw, calc(15px * var(--font-scale))) !important;
+        font-weight: 600;
+        padding: calc(10px * var(--density-scale)) calc(8px * var(--density-scale)) !important;
+        background: rgba(250, 251, 255, 0.95);
+        border: 1px solid rgba(219, 225, 241, 0.9) !important;
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+      }
+
+      #page-3 .cq-cluster-card {
+        gap: calc(12px * var(--density-scale));
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      #page-3 .cq-cluster-head {
+        gap: 12px;
+        margin-bottom: 8px;
+        flex-shrink: 0;
+      }
+
+      #page-3 .cq-cluster-items {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: calc(10px * var(--density-scale));
+        flex: 1;
+        min-height: 0;
+        display: grid;
+      }
+
+      #page-3 .cq-cluster-item {
+        grid-column: span 1;
+        line-height: 1.5;
+        border-radius: 10px;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+        text-align: center;
+        font-size: clamp(calc(11px * var(--font-scale)), 2.5vw, calc(16px * var(--font-scale)));
+      }
+
+      #page-3 .cq-cluster-item--wide {
+        grid-column: span 1;
+      }
+
+      /* 顶部三个卡片的自适应 */
+      #page-3 .cq-cluster-grid-top .cq-cluster-card {
+        height: 100%;
+      }
+
+      /* 底部两个卡片的自适应 */
+      #page-3 .cq-cluster-grid-bottom .cq-cluster-card {
+        height: 100%;
+      }
+
+      .cq-cluster-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      #page-3 .cq-cluster-head {
+        gap: 8px;
+        margin-bottom: 2px;
+      }
+
+      .cq-cluster-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: rgba(26, 87, 216, 0.08);
+        border: 1px solid rgba(26, 87, 216, 0.16);
+        color: var(--accent-primary);
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 600;
+        font-size: calc(12px * var(--font-scale));
+      }
+
+      #page-3 .cq-cluster-chip {
+        padding: 3px 10px;
+        font-size: calc(11px * var(--font-scale));
+      }
+
+      .cq-cluster-title {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 700;
+        font-size: calc(15px * var(--font-scale));
+        color: #0b1b52;
+      }
+
+      #page-3 .cq-cluster-title {
+        font-size: calc(12.5px * var(--font-scale));
+        line-height: 1.3;
+      }
+
+      .cq-cluster-items {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: calc(8px * var(--density-scale));
+      }
+
+      #page-3 .cq-cluster-items {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: calc(6px * var(--density-scale));
+      }
+
+      .cq-cluster-item {
+        grid-column: span 3;
+        background: rgba(250, 251, 255, 0.95);
+        border: 1px solid rgba(219, 225, 241, 0.9);
+        border-radius: 12px;
+        padding: calc(10px * var(--density-scale));
+        text-align: center;
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 600;
+        font-size: calc(12.5px * var(--font-scale));
+        color: var(--text-main);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+      }
+
+      #page-3 .cq-cluster-item {
+        grid-column: span 1;
+        padding: calc(8px * var(--density-scale)) calc(6px * var(--density-scale));
+        font-size: calc(11px * var(--font-scale));
+        line-height: 1.4;
+        border-radius: 8px;
+      }
+
+      .cq-cluster-item--wide {
+        grid-column: span 4;
+      }
+
+      #page-3 .cq-cluster-item--wide {
+        grid-column: span 1;
+      }
+
+      .cq-divider {
+        text-align: center;
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 800;
+        font-size: calc(13px * var(--font-scale));
+        padding: 6px 12px;
+        border-radius: 14px;
+        background: linear-gradient(90deg, rgba(29, 78, 216, 0.08), rgba(29, 78, 216, 0.18), rgba(29, 78, 216, 0.08));
+        color: #0b1b52;
+        margin: calc(4px * var(--density-scale)) 0;
+      }
+
+
+      #page-3 .page-head {
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      #page-3 .page-title {
+        font-size: calc(20px * var(--font-scale));
+        line-height: 1.3;
+      }
+
+      #page-3 .page-sub {
+        font-size: calc(12.5px * var(--font-scale));
+        line-height: 1.5;
+      }
+
+      #page-3 .cq-cluster-subgrid .cq-cluster-card {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: calc(clamp(18px, 2.6vw, 26px) * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+        backdrop-filter: blur(3px);
+      }
+
+      /* 底部新星集群卡片统一风格 */
+      #page-3 .cq-cluster-grid-bottom .cq-cluster-card {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: calc(clamp(18px, 2.6vw, 26px) * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+        backdrop-filter: blur(3px);
+      }
+
+      /* 底部新星集群项目字体自适应 */
+      #page-3 .cq-cluster-grid-bottom .cq-cluster-item {
+        font-family: "FangSong", "STFangsong", "Songti SC", "Noto Serif SC", serif;
+        font-size: clamp(calc(10.5px * var(--font-scale)), 2.2vw, calc(14px * var(--font-scale)));
+        background: rgba(250, 251, 255, 0.95);
+        border: 1px solid rgba(219, 225, 241, 0.9);
+      }
+
+      #page-3 .cq-divider {
+        font-size: calc(13px * var(--font-scale));
+        padding: 8px 14px;
+        margin: calc(4px * var(--density-scale)) 0;
+        flex-shrink: 0;
+      }
+
+      /* 响应式布局 - 16:9 自适应 */
+      @media (max-width: 1200px) {
+        #page-3 .cq-cluster-grid-top {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: calc(10px * var(--density-scale));
+        }
+
+        #page-3 .cq-cluster-grid-bottom {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: calc(10px * var(--density-scale));
+        }
+
+        #page-3 .cq-cluster-items {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        #page-3 .cq-cluster-grid-top {
+          grid-template-columns: 1fr;
+          gap: calc(12px * var(--density-scale));
+        }
+
+        #page-3 .cq-cluster-grid-bottom {
+          grid-template-columns: 1fr;
+          gap: calc(12px * var(--density-scale));
+        }
+
+        #page-3 .cq-cluster-items {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .cq-structure-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+        gap: calc(20px * var(--density-scale));
+        min-height: 0;
+      }
+
+      .cq-points-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(14px * var(--density-scale));
+      }
+
+      .cq-point {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: flex-start;
+        padding: calc(12px * var(--density-scale));
+        border-radius: 14px;
+        border: 1px dashed rgba(148, 163, 184, 0.5);
+        background: rgba(249, 250, 255, 0.96);
+      }
+
+      .cq-point-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(26, 87, 216, 0.08);
+        border: 1px solid rgba(26, 87, 216, 0.16);
+      }
+
+      .cq-point-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--accent-primary);
+      }
+
+      .cq-point-title {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+      }
+
+      .cq-point-text {
+        color: #475569;
+        font-size: calc(12.5px * var(--font-scale));
+        line-height: 1.55;
+      }
+
+      .cq-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: calc(12px * var(--density-scale));
+      }
+
+      .cq-kpi-card {
+        position: relative;
+        background: rgba(251, 253, 255, 0.96);
+        border-radius: 14px;
+        border: 1px solid rgba(219, 225, 241, 0.9);
+        padding: calc(12px * var(--density-scale));
+        display: grid;
+        gap: 6px;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+      }
+
+      .cq-kpi-label {
+        font-size: calc(11px * var(--font-scale));
+        color: #6b7280;
+      }
+
+      .cq-kpi-value {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(17px * var(--font-scale));
+        font-weight: 800;
+        color: var(--accent-primary);
+      }
+
+      .cq-kpi-meta {
+        font-size: calc(11px * var(--font-scale));
+        color: #64748b;
+      }
+
+      .cq-kpi-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 2px 6px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 800;
+        color: #fff;
+      }
+
+      .cq-kpi-badge--ok {
+        background: #16a34a;
+      }
+
+      .cq-kpi-badge--warn {
+        background: #d97706;
+      }
+
+      .cq-kpi-badge--hot {
+        background: #ef4444;
+      }
+
+      .cq-loan-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(18px * var(--density-scale));
+        min-height: 0;
+      }
+
+      .cq-chart {
+        position: relative;
+        min-height: clamp(240px, 32vw, 360px);
+      }
+
+      .cq-chart > div {
+        position: absolute;
+        inset: 0;
+      }
+
+      .cq-card-hint {
+        margin-top: 10px;
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-subtle);
+      }
+
+      .section-card,
+      .key-points-card,
+      .table-card,
+      .scenario-card,
+      .challenge-card,
+      .topic-card {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: calc(clamp(18px, 2.6vw, 26px) * var(--density-scale));
+        display: flex;
+        flex-direction: column;
+        gap: calc(16px * var(--density-scale));
+        box-shadow: var(--shadow-card-soft);
+        backdrop-filter: blur(3px);
+        min-height: 0;
+      }
+
+      .section-card::before,
+      .topic-card::before,
+      .challenge-card::before,
+      .scenario-card::before,
+      .key-points-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(26, 87, 216, 0.06), transparent 55%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .section-card:hover::before,
+      .topic-card:hover::before,
+      .challenge-card:hover::before,
+      .scenario-card:hover::before,
+      .key-points-card:hover::before {
+        opacity: 1;
+      }
+
+      .section-head,
+      .card-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(12px * var(--density-scale));
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .section-title,
+      .card-title,
+      .scenario-headline {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(16px * var(--font-scale));
+        font-weight: 600;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .region-tagline,
+      .card-hint,
+      .progress-label {
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-subtle);
+      }
+
+      .section-body,
+      .scenario-body {
+        flex: 1;
+        min-height: 0;
+        background: var(--bg-soft);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        overflow: auto;
+        overflow-x: hidden;
+        max-height: 100%;
+        padding: calc(16px * var(--density-scale)) calc(18px * var(--density-scale));
+        font-size: calc(13px * var(--font-scale));
+        color: var(--text-dim);
+        line-height: 1.6;
+      }
+      
+      .scenario-body {
+        background: transparent;
+         border: none;
+         padding: 0;
+      }
+      
+      .bullet-list,
+      .mini-list {
+        list-style: disc;
+        padding-left: calc(20px * var(--density-scale));
+        display: grid;
+        gap: calc(8px * var(--density-scale));
+      }
+
+      .mini-compare {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        background: rgba(248, 249, 255, 0.9);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(26, 87, 216, 0.1);
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      .mini-head-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        background: rgba(26, 87, 216, 0.06);
+        border-bottom: 1px solid rgba(26, 87, 216, 0.12);
+      }
+
+      .mini-head-cell {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 600;
+        font-size: calc(12px * var(--font-scale));
+        padding: calc(12px * var(--density-scale)) calc(16px * var(--density-scale));
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-main);
+        border-right: 1px solid rgba(26, 87, 216, 0.12);
+      }
+
+      .mini-head-cell:last-child {
+        border-right: none;
+      }
+
+      .mini-body-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        min-height: 0;
+      }
+
+      .mini-cell {
+        padding: calc(16px * var(--density-scale)) calc(18px * var(--density-scale));
+        border-right: 1px solid rgba(26, 87, 216, 0.1);
+        background: rgba(255, 255, 255, 0.92);
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-dim);
+        line-height: 1.55;
+      }
+
+      .mini-cell:last-child {
+        border-right: none;
+      }
+
+      .badge,
+      .chip,
+      .chip-problem,
+      .chip-solution,
+      .chip-a,
+      .chip-b,
+      .tech-col-head,
+      .solid-col-head,
+      .route-col-head,
+      .desc-col-head {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: calc(12px * var(--font-scale));
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        border: 1px solid transparent;
+        background: rgba(26, 87, 216, 0.08);
+        color: var(--accent-primary);
+      }
+
+      .badge-need {
+        background: rgba(196, 90, 0, 0.12);
+        color: var(--accent-secondary);
+        border-color: rgba(196, 90, 0, 0.2);
+      }
+
+      .chip-problem {
+        background: #fff1f2;
+        color: #b91c1c;
+        border-color: #fecdd3;
+      }
+
+      .chip-solution {
+        background: #eef5ff;
+        color: var(--accent-primary);
+        border-color: rgba(26, 87, 216, 0.24);
+      }
+
+      .chip-a {
+        background: #fff7ed;
+        color: #9a3412;
+        border-color: #fdba74;
+      }
+
+      .chip-b {
+        background: #eef2ff;
+        color: var(--accent-primary);
+        border-color: rgba(26, 87, 216, 0.2);
+      }
+
+      .table-card {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .table-header-row,
+      .table-body-row {
+        display: grid;
+        min-width: 0;
+      }
+
+      .table-header-row.layout-1,
+      .table-body-row.layout-1 {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .table-header-row.layout-2,
+      .table-body-row.layout-2 {
+        grid-template-columns: 220px 1fr 1fr;
+      }
+
+      .table-header-cell,
+      .left-attr-cell,
+      .left-col-cell,
+      .cell,
+      .right-col-cell {
+        padding: calc(18px * var(--density-scale)) calc(20px * var(--density-scale));
+        font-size: calc(13px * var(--font-scale));
+        line-height: 1.55;
+      }
+
+      .table-header-cell {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 600;
+        color: var(--text-main);
+        background: rgba(248, 249, 255, 0.9);
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .table-body-row {
+        border-bottom: 1px solid rgba(219, 225, 241, 0.5);
+      }
+
+      .table-body-row:last-child {
+        border-bottom: none;
+      }
+
+      .left-attr-cell,
+      .left-col-cell {
+        font-weight: 600;
+        color: var(--text-main);
+        background: linear-gradient(90deg, rgba(26, 87, 216, 0.08), rgba(255, 255, 255, 0));
+        border-right: 1px solid rgba(219, 225, 241, 0.5);
+      }
+
+      .cell,
+      .right-col-cell {
+        color: var(--text-dim); 
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .cell-legacy {
+        background: linear-gradient(90deg, rgba(26, 87, 216, 0.05), rgba(26, 87, 216, 0));
+      }
+
+      .cell-solid {
+        background: linear-gradient(90deg, rgba(196, 90, 0, 0.05), rgba(196, 90, 0, 0));
+      }
+
+      .note,
+      .footnote {
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-subtle);
+        border-left: 3px solid rgba(26, 87, 216, 0.2);
+        padding-left: 14px;
+      }
+
+      .note-strong {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .grid-2x2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(clamp(18px, 3vw, 32px) * var(--density-scale));
+        grid-auto-rows: minmax(0, 1fr);
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .grid-2x2.scenario {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: minmax(0, 1fr);
+        align-items: stretch;
+        padding-top: calc(16px * var(--density-scale));
+      }
+
+      .grid-2x2 > * {
+        min-height: 0;
+      }
+
+      .rows-grid {
+        display: grid;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: calc(clamp(18px, 3vw, 28px) * var(--density-scale));
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .rows-grid > * {
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .region-row,
+      .top-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(clamp(18px, 3vw, 28px) * var(--density-scale));
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .bottom-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .col-split-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(clamp(12px, 2vw, 20px) * var(--density-scale));
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .region-row > *,
+      .top-row > *,
+      .bottom-row > *,
+      .col-split-2 > * {
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .main-grid {
+        display: flex;
+        flex-direction: column;
+        gap: calc(clamp(18px, 3vw, 28px) * var(--density-scale));
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .main-grid > * {
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      #page-6 .table-card,
+      #page-7 .table-card {
+        flex: 1;
+        min-height: 0;
+      }
+
+      #app-controls {
+        position: fixed;
+        left: 50%;
+        bottom: var(--layout-gap);
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: calc(14px * var(--density-scale));
+        padding: calc(18px * var(--density-scale)) calc(22px * var(--density-scale));
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border-card);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(12px);
+        z-index: 10;
+        width: min(calc(100% - 2 * var(--layout-gap)), var(--stage-width));
+        max-width: var(--stage-max-width);
+      }
+
+      .control-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: calc(18px * var(--density-scale));
+        flex-wrap: wrap;
+      }
+      
+      .control-group {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(10px * var(--density-scale));
+      }
+
+      #page-progress {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        background: rgba(26, 87, 216, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      #page-progress span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #1a57d8, #4c8dff);
+        border-radius: inherit;
+        width: 0;
+        transition: width 0.35s ease;
+      }
+      
+      #app-controls button {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-weight: 600;
+        font-size: calc(14px * var(--font-scale));
+        padding: 10px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(26, 87, 216, 0.2);
+        background: rgba(26, 87, 216, 0.08);
+        color: var(--accent-primary);
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+
+      #app-controls button:hover:not(:disabled) {
+        background: rgba(26, 87, 216, 0.16);
+        box-shadow: 0 10px 18px rgba(26, 87, 216, 0.18);
+      }
+      
+      #app-controls button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+        box-shadow: none;
+      }
+
+      #btn-fullscreen {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: 12px;
+        white-space: nowrap;
+      }
+
+      #btn-fullscreen .fullscreen-icon {
+        font-size: calc(16px * var(--font-scale));
+        line-height: 1;
+      }
+      
+      #app-controls button:focus-visible {
+        outline: 2px solid rgba(26, 87, 216, 0.55);
+        outline-offset: 3px;
+      }
+
+      #page-indicator {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(13px * var(--font-scale));
+        color: var(--text-subtle);
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(26, 87, 216, 0.08);
+        border: 1px solid rgba(26, 87, 216, 0.16);
+      }
+      
+      #page-title-display {
+        font-size: calc(12px * var(--font-scale));
+        color: var(--text-subtle);
+        max-width: 320px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #page-title-display[aria-live] {
+        min-height: 1.3em;
+      }
+
+      #app-controls .font-control {
+        padding: 8px 12px;
+      }
+
+      body.fullscreen-active #app-controls {
+        bottom: clamp(12px, 2vh, 24px);
+        width: min(calc(100% - 2 * clamp(12px, 3vw, 32px)), var(--stage-width));
+        max-width: none;
+      }
+
+      .subtitle span,
+      .section-text b,
+      .section-body b,
+      .mini-cell b {
+        color: var(--text-main);
+        font-weight: 600;
+      }
+
+      .sub-head {
+        font-family: "SimHei", "Microsoft YaHei", "PingFang SC", sans-serif;
+        font-size: calc(12px * var(--font-scale));
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 6px;
+      }
+
+      footer.note,
+      .footnote {
+        background: rgba(248, 249, 255, 0.8);
+        border-radius: var(--radius-sm);
+        padding: calc(14px * var(--density-scale)) calc(16px * var(--density-scale));
+        border-left-width: calc(4px * var(--density-scale));
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(26, 87, 216, 0.2);
+        border-radius: 999px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(26, 87, 216, 0.05);
+        border-radius: 999px;
+      }
+
+      @media (max-width: 1200px) {
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .highlight-metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .cq-overview-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .cq-overview-cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .cq-kpi-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .cq-cluster-items {
+          grid-template-columns: repeat(8, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        body {
+          padding: clamp(12px, 6vw, 24px);
+          padding-bottom: 140px;
+        }
+
+        .slide-stage {
+          min-height: clamp(320px, 85vh, 680px);
+          width: 100%;
+        }
+
+        .grid-2x2,
+        .rows-grid,
+        .region-row,
+        .top-row,
+        .col-split-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .grid-2x2.scenario {
+          grid-auto-rows: auto;
+        }
+
+        .highlight-metrics,
+        .insight-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .cq-overview-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .cq-cluster-items {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .cq-cluster-item,
+        .cq-cluster-item--wide {
+          grid-column: span 2;
+        }
+
+        .cq-structure-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .cq-points-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .cq-kpi-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .cq-loan-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .mini-body-row {
+          grid-template-columns: 1fr;
+        }
+
+        .mini-cell {
+          border-right: none;
+          border-bottom: 1px solid rgba(26, 87, 216, 0.1);
+        }
+
+        .mini-cell:last-child {
+          border-bottom: none;
+        }
+
+        #app-controls {
+          position: fixed;
+          left: 50%;
+          right: auto;
+          bottom: 12px;
+          transform: translateX(-50%);
+          width: calc(100% - 24px);
+          max-width: none;
+          border-radius: 18px;
+        }
+
+        #page-title-display {
+          display: none;
+        }
+
+        .control-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .control-group {
+          justify-content: space-between;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+
+        #page-progress span {
+          transition: none;
+        }
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-deck-container">
+      <div class="slide-stage" id="slide-stage" data-max-width="1280">
+        <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute; width: 0; height: 0; overflow: hidden">
+          <symbol id="ico-crown" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7l4 4 5-8 5 8 4-4v11H3z" />
+          </symbol>
+          <symbol id="ico-rocket" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 13l6-6m-1 8 6-6m0 0c2 2 3 5 3 8 0 2-1 4-3 4-3 0-6-1-8-3" />
+          </symbol>
+          <symbol id="ico-flask" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 2v4l-5 9a5 5 0 005 7h4a5 5 0 005-7l-5-9V2" />
+          </symbol>
+          <symbol id="ico-factory" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18V9l-5 3V9l-5 3V3H8v18" />
+          </symbol>
+          <symbol id="ico-leaf" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12c0 6 8 8 12 4 4-4 2-12-4-12C8 4 4 8 4 12zm0 0l8-2" />
+          </symbol>
+        </svg>
+
+        <!-- 封面页 -->
+        <div class="slide-page cover-page" id="page-0" data-title="封面">
+          <main class="cover-content">
+            <div class="cover-decoration-top"></div>
+            <div class="cover-main">
+              <div class="cover-eyebrow">研究报告</div>
+              <h1 class="cover-title">固态电池产业研究报告</h1>
+              <div class="cover-divider"></div>
+              <div class="cover-subtitle">重庆分行 XXX</div>
+            </div>
+            <div class="cover-decoration-bottom"></div>
+          </main>
+        </div>
+
+        <div class="slide-page" id="page-1" data-title="重庆四个历史发展阶段">
+            <header class="page-head">
+              <h1 class="page-title">重庆四个历史发展阶段</h1>
+              <div class="page-sub">1891—至今：从开埠通商，到抗战迁渝培育、三线建设夯实，再到直辖推动的快速发展</div>
+            </header>
+            <main class="content-grid">
+              <section class="section-card">
+                <div class="section-head">
+                <div class="section-title">阶段梳理</div>
+                  <span class="chip">Timeline</span>
+                </div>
+                <div class="section-body">
+                <div class="cq-history-timeline">
+                  <div class="cq-history-item">
+                    <div class="cq-history-dot" aria-hidden="true"></div>
+                    <div class="cq-history-title">萌芽发展期</div>
+                    <div class="cq-history-year">1891年 开埠通商</div>
+                    <p class="cq-history-desc">对外开放启动，通商口岸带动工商业萌芽与城市近代化初步推进。</p>
+                    </div>
+                  <div class="cq-history-item">
+                    <div class="cq-history-dot" aria-hidden="true"></div>
+                    <div class="cq-history-title">基础培育期</div>
+                    <div class="cq-history-year">1937—1945年 抗战工业迁渝</div>
+                    <p class="cq-history-desc">大量企业与科研机构内迁，形成以军工与民生工业为支点的产业基础。</p>
+                    </div>
+                  <div class="cq-history-item">
+                    <div class="cq-history-dot" aria-hidden="true"></div>
+                    <div class="cq-history-title">巩固发展期</div>
+                    <div class="cq-history-year">1964—1984年 三线建设</div>
+                    <p class="cq-history-desc">重大项目集中布局，交通能源与工业体系完善，夯实重化工业优势。</p>
+                    </div>
+                  <div class="cq-history-item">
+                    <div class="cq-history-dot" aria-hidden="true"></div>
+                    <div class="cq-history-title">快速发展期</div>
+                    <div class="cq-history-year">1996年至今 直辖推动</div>
+                    <p class="cq-history-desc">区域开放能级跃升，制造业与城市功能加速升级，迈向现代化大都市。</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section class="section-card">
+                <div class="section-head">
+                <div class="section-title">历史影像</div>
+                  <span class="chip">Gallery</span>
+                </div>
+              <div class="section-body" style="padding: calc(12px * var(--density-scale))">
+                <div class="cq-history-gallery">
+                  <figure class="cq-history-photo">
+                    <div class="cq-history-visual cq-history-visual--a">
+                      <img class="responsive" alt="重庆沿江工业区老照片（黑白）"             
+                      src="data:image/webp;base64,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" />
+                    </div>
+                  </figure>
+                  <!-- <figure class="cq-history-photo">
+                    <div class="cq-history-visual cq-history-visual--b" role="img" aria-label="三线建设 · 重工业布局"></div>
+                   <img class="responsive" alt="历史训练场景（黑白）" 
+                   src="data:image/webp;base64,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" />
+                  </figure> -->
+                  </div>
+                </div>
+              </section>
+            </main>
+        </div>
+
+        <div class="slide-page" id="page-2" data-title="重庆市发展现状：稳步发展，向新向优">
+          <header class="slide-header">
+            <h1 class="title">
+              重庆市发展现状：
+              <span style="font-weight: 700; background: linear-gradient(90deg, #1a57d8, #6aa3ff); -webkit-background-clip: text; background-clip: text; color: transparent">稳步发展，向新向优</span>
+            </h1>
+            <p class="subtitle">核心产业量质并进 · 区位优势叠加释放动能</p>
+                    </header>
+          <main class="cq-overview-layout">
+            <section class="section-card">
+              <div class="section-head">
+                <div class="section-title">产业亮点</div>
+                <span class="chip">Key Sectors</span>
+              </div>
+              <div class="cq-overview-cards">
+                <article class="cq-overview-card">
+                  <h3>汽车 <span class="cq-overview-chip">产业支柱</span></h3>
+                          <p>2024年产量<strong>254万辆</strong>，占全国<strong>8%</strong>，西部第一、全国第二；新能源汽车<strong>95.3万辆</strong>，占全国<strong>7.2%</strong>，<strong>+90.5%</strong>。</p>
+                          <p>2025年上半年产量<strong>121.85万辆</strong>（<strong>+0.3%</strong>），其中新能源汽车<strong>48.93万辆</strong>（<strong>+25.0%</strong>）。</p>
+                        </article>
+                <article class="cq-overview-card">
+                  <h3>电子 <span class="cq-overview-chip">量质并进</span></h3>
+                          <p>晶圆产能进入<strong>全国前10</strong>；功率半导体产量进入<strong>全国前3</strong>。</p>
+                          <p>笔电<strong>6682万台</strong>（<span class="muted">-5.4%</span>），已连续<strong>10年</strong>位列<strong>全球第一</strong>；智能手机<strong>7588万台</strong>（<span class="muted">-1.4%</span>），<strong>全国第四</strong>。</p>
+                        </article>
+                <article class="cq-overview-card">
+                  <h3>区位优势 <span class="cq-overview-chip">叠加效应</span></h3>
+                          <p>成渝双城经济圈、内陆开放高地、西部陆海新通道。</p>
+                          <p>叠加<strong>完备产业体系</strong>与<strong>超大城市现代化治理</strong>新路径。</p>
+                        </article>
+                      </div>
+                  </section>
+            <!-- <section class="section-card">
+              <div class="section-head">
+                <div class="section-title">智能制造现场</div>
+                <span class="chip">示意</span>
+                </div>
+              <div class="cq-overview-media">
+                <img
+                  alt="洁净室生产线：智能制造车间"
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3ClinearGradient id='cleanroom' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23f8fafc'/%3E%3Cstop offset='50%25' stop-color='%23ffffff'/%3E%3Cstop offset='100%25' stop-color='%23e2e8f0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23cleanroom)'/%3E%3Ctext x='50%25' y='50%25' fill='rgba(0,0,0,0.6)' font-family='PingFang SC' font-size='36' text-anchor='middle'%3E%E6%B4%81%E5%87%80%E5%AE%A4%E7%94%9F%E4%BA%A7%E7%BA%BF%3C/text%3E%3C/svg%3E"
+                />
+                <div class="cq-overview-overlay">智能制造 · 洁净室精密制造车间</div>
+              </div>
+            </section> -->
+          </main>
+        </div>
+        
+        <div class="slide-page" id="page-3" data-title="“33618”现代制造业集群体系">
+          <header class="page-head">
+            <h1 class="page-title">“33618”现代制造业集群体系</h1>
+            <div class="page-sub">按重庆市产业集群布局要点提炼：3 大万亿主导、3 大五千亿支柱、6 大千亿特色、18 个“新星”梯队</div>
+              </header>
+          <main class="cq-cluster-grid">
+            <div class="cq-cluster-grid-top">
+              <section class="cq-cluster-card">
+                <div class="cq-cluster-head">
+                  <span class="cq-cluster-chip">3</span>
+                  <div class="cq-cluster-title">大万亿级主导产业集群</div>
+                </div>
+                <div class="cq-cluster-items">
+                  <div class="cq-cluster-item cq-cluster-item--wide">智能网联新能源汽车</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">新一代电子信息制造业</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">先进材料</div>
+              </div>
+              </section>
+              <section class="cq-cluster-card">
+                <div class="cq-cluster-head">
+                  <span class="cq-cluster-chip">3</span>
+                  <div class="cq-cluster-title">大五千亿级支柱产业集群</div>
+                </div>
+                <div class="cq-cluster-items">
+                  <div class="cq-cluster-item cq-cluster-item--wide">智能装备及智能制造</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">食品及农产品加工</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">软件信息服务</div>
+              </div>
+              </section>
+              <section class="cq-cluster-card">
+                <div class="cq-cluster-head">
+                  <span class="cq-cluster-chip">6</span>
+                  <div class="cq-cluster-title">大千亿级特色优势产业集群</div>
+                </div>
+                <div class="cq-cluster-items">
+                  <div class="cq-cluster-item">新型显示</div>
+                  <div class="cq-cluster-item">高端摩托车</div>
+                  <div class="cq-cluster-item">轻合金材料</div>
+                  <div class="cq-cluster-item">轻纺</div>
+                  <div class="cq-cluster-item">生物医药</div>
+                  <div class="cq-cluster-item">能源及新型储能</div>
+              </div>
+              </section>
+                  </div>
+            <div class="cq-divider">18 个"新星"产业集群</div>
+            <div class="cq-cluster-grid-bottom">
+              <section class="cq-cluster-card">
+                <div class="cq-cluster-head">
+                  <span class="cq-cluster-chip">6</span>
+                  <div class="cq-cluster-title">个未来产业集群</div>
+                </div>
+                <div class="cq-cluster-items">
+                  <div class="cq-cluster-item cq-cluster-item--wide">卫星互联网</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">生物制造</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">生命科学</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">元宇宙</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">前沿新材料</div>
+                  <div class="cq-cluster-item cq-cluster-item--wide">未来能源</div>
+                  </div>
+              </section>
+              <section class="cq-cluster-card">
+                <div class="cq-cluster-head">
+                  <span class="cq-cluster-chip">12</span>
+                  <div class="cq-cluster-title">个高成长性产业集群</div>
+                </div>
+                <div class="cq-cluster-items">
+                  <div class="cq-cluster-item">功率半导体及集成电路</div>
+                  <div class="cq-cluster-item">AI及机器人</div>
+                  <div class="cq-cluster-item">服务器</div>
+                  <div class="cq-cluster-item">智能家居</div>
+                  <div class="cq-cluster-item">传感器及仪器仪表</div>
+                  <div class="cq-cluster-item">智能制造装备</div>
+                  <div class="cq-cluster-item">动力装备</div>
+                  <div class="cq-cluster-item">农机装备</div>
+                  <div class="cq-cluster-item">纤维及复合材料</div>
+                  <div class="cq-cluster-item">合成材料</div>
+                  <div class="cq-cluster-item">现代中药</div>
+                  <div class="cq-cluster-item">医疗器械</div>
+              </div>
+            </section>
+            </div>
+          </main>
+        </div>
+
+        <div class="slide-page" id="page-4" data-title="重庆制造业：全国占比与结构短板">
+          <header class="page-head">
+            <h1 class="page-title">重庆制造业：全国占比与结构短板</h1>
+            <div class="page-sub">依据统计口径测算，重庆制造业体量约占全国 2% 左右，亮点与短板并存：总量偏小、龙头偏少、新动能与原始创新仍待增强。</div>
+          </header>
+          <main class="cq-structure-grid">
+            <section class="section-card">
+              <!-- <div class="section-head">
+                <div class="section-title">结构不足 · 数据支撑</div>
+              </div> -->
+              <div class="section-body">
+                <div class="cq-points-grid">
+                  <div class="cq-point">
+                    <div class="cq-point-icon" aria-hidden="true">
+                      <svg role="img" aria-label="龙头缺口"><use href="#ico-crown"></use></svg>
+                  </div>
+                    <div>
+                      <div class="cq-point-title">总量偏小 · 龙头偏少</div>
+                      <p class="cq-point-text">规上工业与制造业增加值占全国约 <strong>2%~2.4%</strong>；规上企业数占比 <strong>1.56%</strong>，单项冠军 <strong>1.93%</strong>，龙头梯队仍偏薄。</p>
+                    </div>
+                    </div>
+                  <div class="cq-point">
+                    <div class="cq-point-icon" aria-hidden="true">
+                      <svg role="img" aria-label="动能转换"><use href="#ico-rocket"></use></svg>
+                  </div>
+                          <div>
+                      <div class="cq-point-title">新旧动能转换压力</div>
+                      <p class="cq-point-text">工业占GDP <strong>27.68%</strong>（全国 <strong>30.50%</strong>）；工业投资增速 <strong>11.2%</strong>（全国 <strong>12.1%</strong>），新兴产业支撑仍需加速。</p>
+                          </div>
+                        </div>
+                  <div class="cq-point">
+                    <div class="cq-point-icon" aria-hidden="true">
+                      <svg role="img" aria-label="创新"><use href="#ico-flask"></use></svg>
+                    </div>
+                          <div>
+                      <div class="cq-point-title">原始创新驱动力不足</div>
+                      <p class="cq-point-text">R&amp;D 强度 <strong>2.6%</strong>（略低于全国 <strong>2.68%</strong>）；基础研究占比约 <strong>4.3%</strong>（全国约 <strong>6.9%</strong>），源头供给仍需加强。</p>
+                          </div>
+                        </div>
+                  <div class="cq-point">
+                    <div class="cq-point-icon" aria-hidden="true">
+                      <svg role="img" aria-label="转型"><use href="#ico-factory"></use></svg>
+                    </div>
+                          <div>
+                      <div class="cq-point-title">传统企业转型压力</div>
+                      <p class="cq-point-text">隆鑫、力帆、重钢等龙头正推进低碳动力、平台化电驱、绿色品种钢等项目，以提升盈利弹性与抗周期能力。</p>
+                          </div>
+                        </div>
+                          </div>
+                        </div>
+            </section>
+            <section class="section-card">
+              <!-- <div class="section-head">
+                <div class="section-title">关键量化刻画（4×N栅格）</div>
+              </div> -->
+              <div class="section-body">
+                <div class="cq-kpi-grid">
+                  <div class="cq-kpi-card">
+                    <span class="cq-kpi-badge cq-kpi-badge--ok">亮点</span>
+                    <div class="cq-kpi-label">规上工增值增速</div>
+                    <div class="cq-kpi-value">7.3%</div>
+                    <div class="cq-kpi-meta">全国 5.8% · 明显高于全国</div>
+                      </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">制造业生产总值</div>
+                    <div class="cq-kpi-value">3.22 万亿元</div>
+                    <div class="cq-kpi-meta">全国 134.91 万亿元 · 占比 2.39%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">工业增加值</div>
+                    <div class="cq-kpi-value">0.89 万亿元</div>
+                    <div class="cq-kpi-meta">全国 40.54 万亿元 · 占比 2.20%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">规上工业总产值</div>
+                    <div class="cq-kpi-value">2.68 万亿元</div>
+                    <div class="cq-kpi-meta">全国 133.32 万亿元 · 占比 2.01%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">工业占GDP</div>
+                    <div class="cq-kpi-value">27.68%</div>
+                    <div class="cq-kpi-meta">全国 30.50% · 略低</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">规上企业主营收入</div>
+                    <div class="cq-kpi-value">2.80 万亿元</div>
+                    <div class="cq-kpi-meta">全国 137.87 万亿元 · 占比 2.03%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">规上企业数</div>
+                    <div class="cq-kpi-value">7,992 家</div>
+                    <div class="cq-kpi-meta">全国 511,600 家 · 占比 1.56%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <span class="cq-kpi-badge cq-kpi-badge--hot">偏弱</span>
+                    <div class="cq-kpi-label">工业投资增速</div>
+                    <div class="cq-kpi-value">11.2%</div>
+                    <div class="cq-kpi-meta">全国 12.1% · 排名第19位</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">制造业单项冠军</div>
+                    <div class="cq-kpi-value">30 家</div>
+                    <div class="cq-kpi-meta">全国 1,557 家 · 占比 1.93%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">“专精特新”小巨人</div>
+                    <div class="cq-kpi-value">310 家</div>
+                    <div class="cq-kpi-meta">全国 14,600 家 · 占比 2.12%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <span class="cq-kpi-badge cq-kpi-badge--ok">活跃</span>
+                    <div class="cq-kpi-label">专精特新中小企业</div>
+                    <div class="cq-kpi-value">5,035 家</div>
+                    <div class="cq-kpi-meta">全国 140,000 家 · 占比 3.60%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">R&amp;D 支出</div>
+                    <div class="cq-kpi-value">850 亿元</div>
+                    <div class="cq-kpi-meta">全国 36,130 亿元 · 占比 2.35%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">基础研究经费</div>
+                    <div class="cq-kpi-value">36.3 亿元</div>
+                    <div class="cq-kpi-meta">全国 2,497 亿元 · 占比 1.45%</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <span class="cq-kpi-badge cq-kpi-badge--warn">接近</span>
+                    <div class="cq-kpi-label">R&amp;D 强度</div>
+                    <div class="cq-kpi-value">2.60%</div>
+                    <div class="cq-kpi-meta">全国 2.68% · 排名第10位</div>
+                  </div>
+                  <div class="cq-kpi-card">
+                    <div class="cq-kpi-label">利润率（估）</div>
+                    <div class="cq-kpi-value">5.31%</div>
+                    <div class="cq-kpi-meta">全国 5.39% · 基本接近</div>
+                  </div>
+                </div>
+                    </div>
+                  </section>
+          </main>
+                      </div>
+
+        <div class="slide-page" id="page-5" data-title="重庆分行制造业总体情况">
+          <header class="page-head">
+            <h1 class="page-title">重庆分行制造业总体情况</h1>
+            <div class="page-sub">2020—2024累计发放制造业贷款 519.65 亿元，其中中长期 423.27 亿元，占比 81.45%。</div>
+          </header>
+          <main class="cq-loan-grid">
+            <section class="section-card">
+              <div class="section-head">
+                <div class="section-title">分行制造业贷款发放情况</div>
+              </div>
+              <div class="section-body">
+                <div class="cq-chart"><div id="cq-chart-issuance" aria-label="分行制造业贷款发放情况"></div></div>
+                <p class="cq-card-hint">图例：黄色=中长期余额；蓝色=制造业余额；红线=中长期占比。</p>
+              </div>
+            </section>
+            <section class="section-card">
+              <div class="section-head">
+                <div class="section-title">分行制造业贷款余额情况</div>
+              </div>
+              <div class="section-body">
+                <div class="cq-chart"><div id="cq-chart-balance" aria-label="分行制造业贷款余额情况"></div></div>
+                <p class="cq-card-hint">图例：黄色=制造业中长期；蓝色=制造业；红线=中长期占比。</p>
+                    </div>
+                  </section>
+                </main>
+          <footer class="note" style="margin-top: 12px">重点攻坚战略性新兴产业。</footer>
+              </div>
+
+
+
+      <div class="slide-page" id="page-7" data-title="液态 vs 固态 对比">
+        <header class="slide-header">
+          <h1 class="title">
+            液态锂离子电池 vs 固态电池
+          </h1>
+          <p class="subtitle">
+            固态电池采用固态电解质 (导电+隔离)，旨在提升安全、能量密度与工作温区。
+            现状：仍处于车规级先导线验证阶段，尚未全面量产。
+          </p>
+              </header>
+        <main class="content-grid">
+          <section class="key-points-card" style="grid-template-columns: 320px 1fr">
+            <div class="section-block">
+              <h2 class="section-head" style="font-size: calc(16px * var(--font-scale))">
+                <span class="badge">定义</span>
+                什么是固态电池
+              </h2>
+              <p class="section-text" style="font-size: calc(15px * var(--font-scale))">
+                以固态电解质替代传统液态电解液；固态电解质 = 传导锂离子 + 隔离正负极 (即“电解液+隔膜”合一)。
+              </p>
+              <ul class="hero-list">
+                <li>导离子、隔绝短路两大功能由<strong>单一固态介质</strong>承担。</li>
+                <li>与现有高电压正极组合，为 350-400 Wh/kg 系统密度奠定基础。</li>
+              </ul>
+              </div>
+            <div class="section-block" style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 16px">
+              <h2 class="section-head" style="font-size: calc(16px * var(--font-scale))">
+                <span class="badge">目标性能</span>
+                为什么受到关注
+              </h2>
+              <p class="section-text" style="font-size: calc(15px * var(--font-scale))">
+                目标：提升能量密度 (可配金属锂负极)、提升安全性 (热稳定)、拓宽工作温区 (如-30℃到高温)。
+              </p>
+              <ul class="hero-list">
+                <li>安全：高温不挥发、不燃烧，缓解热失控连锁反应。</li>
+                <li>性能：兼容高压、高比容量电极，延长续航与循环寿命。</li>
+                <li>环境：在极端低温仍保持导离子能力，适配极地/高海拔使用场景。</li>
+              </ul>
+            </div>
+            <div class="section-block" style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 16px">
+              <h2 class="section-head" style="font-size: calc(16px * var(--font-scale))">
+                <span class="badge-need">现阶段状态</span>
+                工程化进展
+              </h2>
+              <p class="section-text" style="font-size: calc(16px * var(--font-scale))">
+                现状：处于先导线和小批量验证阶段。
+                难点：离子电导率、界面接触、循环寿命、制造一致性与成本控制。
+              </p>
+              <ul class="hero-list">
+                <li>先导线重点验证<strong>良率与一致性</strong>，攻克界面缺陷。</li>
+                <li>半固态导入豪华车型路测，收集热管理与耐久数据。</li>
+                <li>量产关键：固态电解质成本下降 + 干法极片装备迭代。</li>
+              </ul>
+            </div>
+          </section>
+          <section class="table-card" aria-label="对比表格">
+            <div class="table-header-row layout-2">
+              <div class="table-header-cell" style="border-right: 1px solid var(--border-subtle)">
+                对比维度
+              </div>
+              <div class="table-header-cell" style="border-right: 1px solid var(--border-subtle)">
+                <span class="tech-col-head">传统液态锂离子电池</span>
+              </div>
+              <div class="table-header-cell">
+                <span class="solid-col-head">固态电池 / 全固态电池</span>
+              </div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">离子传导介质</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                液态电解液 (传导)
+              </div>
+              <div class="cell cell-solid">固态电解质 (传导)</div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">隔离正负极方式</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                隔膜 (物理隔离)
+              </div>
+              <div class="cell cell-solid">固态电解质 (本身既导电又隔离)</div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">安全性 / 热稳定性</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                电解液可燃；隔膜破损易热失控。
+              </div>
+              <div class="cell cell-solid">
+                不易燃，热稳定性高，降低热失控风险。
+              </div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">工作温区 / 环境适应</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                对温度敏感，极寒/高温衰减明显。
+              </div>
+              <div class="cell cell-solid">目标：实现更宽可用温区 (如-30℃+)。</div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">能量密度上限</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                受材料/结构限制，提升空间放缓。
+              </div>
+              <div class="cell cell-solid">
+                可配高比容负极 (如金属锂)，显著提升系统能量密度。
+              </div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">循环寿命 / 快充</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                技术成熟，已规模量产。
+              </div>
+              <div class="cell cell-solid">
+                仍在攻克界面/枝晶问题，尚处验证阶段。
+              </div>
+            </div>
+            <div class="table-body-row layout-2">
+              <div class="left-attr-cell">产业化状态</div>
+              <div class="cell cell-legacy" style="border-right: 1px solid var(--border-subtle)">
+                成熟商业量产 (GWh级)。
+              </div>
+              <div class="cell cell-solid">
+                车规级先导线/小批量验证；成本/良率/工艺未定型。
+              </div>
+            </div>
+            </section>
+          </main>
+        <div class="footnote">
+          注：本页为技术原理和目标性能对比，固态电池的能力指标为产业目标值/样品阶段表现，尚未在大规模车规量产中完全验证。
+        </div>
+      </div>
+
+      <div class="slide-page" id="page-6" data-title="固态电池：定义与技术路线">
+        <header class="slide-header">
+          <h1 class="title">固态电池：定义与技术路线</h1>
+          <p class="subtitle" style="padding-left: 16px; text-indent: -16px">
+            <b>• 定义</b>：采用固态电解质，替代传统液态电解液和隔膜。
+            <b>• 优势</b>：更高热稳定性与化学稳定性，可搭配高能量密度正负极材料。
+            <b>• 目标</b>：同时提升安全性与能量密度，被视为突破液态锂电瓶颈的关键方向。
+          </p>
+        </header>
+
+      <main class="content-grid">
+        <section class="key-points-card">
+          <div class="section-block">
+            <h2 class="section-head">
+              固态电池的本质
+              <span class="badge">核心定义</span>
+            </h2>
+            <p class="section-text" style="font-size: calc(16px * var(--font-scale)); line-height: 1.6">
+              固态电池以固态电解质传导锂离子，并同时隔离正负极 (等同于“电解液+隔膜”合一)。
+              相比液态体系，固态体系更耐高温、不易燃，理论上可引入金属锂负极，从而提升能量密度与安全性。<br>
+              <br>
+              固态电解质兼具<strong>传导+隔离</strong>双功能，减少系统件数。<br>
+              高安全基底为高镍正极、金属锂等高比能材料提供工程化空间。<br>
+              材料创新叠加干法工艺，推动下一代电芯标准的建立。
+            </p>
+          </div>
+        </section>
+        <section class="table-card" aria-label="技术路线分类">
+          <div class="table-header-row layout-1">
+            <div class="table-header-cell" style="border-right: 1px solid var(--border-subtle)">
+              <span class="route-col-head" " >技术路线</span>
+        </div>
+            <div class="table-header-cell" >
+              <span class="desc-col-head"">典型特征与现状</span>
+            </div>
+          </div>
+          <div class="table-body-row layout-1">
+            <div class="left-col-cell">硫化物固态电池</div>
+            <div class="right-col-cell">
+              <b>优势:</b> 离子电导率高 (近液态)，能量密度和倍率性能上限高，业内主攻方向。<br />
+              <b>难点:</b> 成本高，对湿度/空气敏感，界面稳定性待解。
+            </div>
+          </div>
+          <div class="table-body-row layout-1">
+            <div class="left-col-cell">氧化物固态电池</div>
+            <div class="right-col-cell">
+              <b>优势:</b> 陶瓷电解质，化学/耐热性好，空气稳定。<br />
+              <b>难点:</b> 室温电导率中，界面阻抗大，刚性高难加工。<br />
+              <b>路线:</b> 常引入少量液体，形成“半固态”以改善界面。
+            </div>
+          </div>
+          <div class="table-body-row layout-1">
+            <div class="left-col-cell">聚合物固态电池</div>
+            <div class="right-col-cell">
+              <b>优势:</b> 柔性好，易成膜，兼容现工艺，成本相对低。<br />
+              <b>难点:</b> 室温电导率低 (需高温工作)，电化学窗口窄 (影响高压正极)。
+            </div>
+          </div>
+          <div class="table-body-row layout-1">
+            <div class="left-col-cell">卤化物固态电池</div>
+            <div class="right-col-cell">
+              <b>优势:</b> 宽电压窗口，循环稳定性潜力好 (适配高压正极)。<br />
+              <b>难点:</b> 离子电导率偏低，仍处实验验证阶段，产业化路径未成熟。
+            </div>
+          </div>
+        </section>
+      </main>
+      <div class="footnote">
+        注：氧化物、聚合物体系通常以“半固态/准固态” (少量液态+固态电解质) 形式率先导入量产，作为向全固态过渡的方案。
+      </div>
+      </div>
+
+      <div class="slide-page" id="page-9" data-title="技术难点 vs 行业应对">
+        <header class="page-head">
+          <div class="page-line1">
+            <h1 class="page-title">技术难点 vs 行业应对</h1>
+            <div class="page-desc" style="font-size: calc(14px * var(--font-scale))">
+              固态电池的真正难点在于“如何将高比能+高安全稳定复制到产线”。
+            </div>
+          </div>
+        </header>
+        <main class="grid-2x2">
+          <section class="challenge-card">
+            <div class="card-head">
+              <div class="card-title">1. 固态电解质材料性能瓶颈</div>
+              <div class="card-hint">室温离子电导率偏低 / 各体系都有硬伤 → 决定倍率和快充潜力</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-problem">难点</span>材料导电&amp;加工</div>
+                <div class="mini-head-cell"><span class="chip-solution">应对</span>材料+工艺协同</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li><b>室温离子电导率不足</b> (影响倍率)。</li>
+                    <li><b>硫化物：</b>吸湿分解 (产H₂S)，成本高。</li>
+                    <li><b>氧化物：</b>硬脆，难与电极贴合。</li>
+                    <li><b>聚合物：</b>常温导电差，需加热工作。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>掺杂 / 晶格调控，<b>提升本征导电率</b>。</li>
+                    <li>扩大稳定电压窗口 (适配高压正极)。</li>
+                    <li>致密成膜、干法压制，<b>减少孔隙和高阻区</b>。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="challenge-card">
+            <div class="card-head">
+              <div class="card-title">2. 固-固界面相容性</div>
+              <div class="card-hint">接触差+应力循环 → 阻抗飙升、寿命掉、甚至重新触发枝晶</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-problem">难点</span>接触&amp;稳定性</div>
+                <div class="mini-head-cell"><span class="chip-solution">应对</span>界面工程</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>固体-固体多为<b>点接触</b>，界面阻抗高。</li>
+                    <li>循环中电极膨胀/收缩 → <b>剥离+裂纹</b>累积。</li>
+                    <li>裂纹通道可能让锂枝晶穿膜 (安全隐患)。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>柔性中间层 / 界面涂层，<b>提高贴合度</b>。</li>
+                    <li>恒定外压，抑制剥离。</li>
+                    <li><b>半固态过渡</b>：引入少量液态/凝胶改善接触。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="challenge-card">
+            <div class="card-head">
+              <div class="card-title">3. 高比能电极适配</div>
+              <div class="card-hint">锂金属、高镍/富锂正极、硅基负极 → 高能但“难驯服”</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-problem">难点</span>材料协同</div>
+                <div class="mini-head-cell"><span class="chip-solution">应对</span>协同设计</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li><b>锂金属负极</b>：枝晶+与硫化物剧烈反应。</li>
+                    <li><b>高镍/富锂正极</b>：副反应多，容量衰减快。</li>
+                    <li><b>硅基负极</b>：体积膨胀大，撑裂界面。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>人工/稳定SEI膜，<b>抑制副反应和枝晶</b>。</li>
+                    <li>复合负极 + 弹性骨架，缓冲膨胀。</li>
+                    <li>优化电极结构，与固态电解质协同。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="challenge-card">
+            <div class="card-head">
+              <div class="card-title">4. 规模化制造 &amp; 良率</div>
+              <div class="card-hint">不是做出样品，而是“整条线稳定出货”</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-problem">难点</span>工艺 / 成本</div>
+                <div class="mini-head-cell"><span class="chip-solution">应对</span>产线工程化</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>传统“涂布-注液”<b>不可直接复用</b>。</li>
+                    <li>需干法电极、热压层压等新工艺。</li>
+                    <li>早期良率低 (厚度不均/界面空隙) = 成本高。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>开发<b>干法电极/固态膜成膜+叠片一体线</b>。</li>
+                    <li><b>半固态先量产</b>：复用部分现有产线，降低CapEx和良率压力，再向全固态迭代。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            </section>
+          </main>
+        <footer class="note" style="margin-top: 0">
+          <span class="note-strong">一图结论：</span>
+          材料 → 界面 → 电极 → 产线 是一条锁链。任一环节未工程化，固态电池就止步于“样机”，无法“车规批量上车”。
+        </footer>
+      </div>
+
+      <div class="slide-page" id="page-11" data-title="成本分析：成本曲线 vs 应用渗透">
+        <header class="page-head">
+          <div class="page-line1">
+            <h1 class="page-title">成本曲线 vs 应用渗透</h1>
+          </div>
+          <div class="page-desc" style="font-size: calc(12px * var(--font-scale))">
+            关键判断：固态电池的核心问题是“在什么市场先承受高成本，并用什么速度把成本打下来”。
+          </div>
+        </header>
+        <main class="grid-2x2">
+          <section class="topic-card">
+            <div class="card-head">
+              <div class="card-title">1. 当前成本现状：仍显著高于液态锂电</div>
+              <div class="card-hint">固态=高材料成本+新产线CapEx+良率不稳定</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-a">现状</span> 单Wh成本</div>
+                <div class="mini-head-cell"><span class="chip-b">原因</span> 为什么这么贵？</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>首批量产固态 (半固态) 预计是三元液态的<b>约3倍以上成本</b> (固态约 2元/Wh+ vs 液态约 0.5元/Wh)。</li>
+                    <li>实验室全固态方案可达液态的<b>5~10倍</b>。</li>
+                    <li>→ 现阶段全固态完全不具备普适经济性。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li><b>固态电解质材料昂贵</b> (如硫化物)。</li>
+                    <li><b>全新工艺设备/干法压制</b>，无法复用“涂布-注液”产线 (高CapEx)。</li>
+                    <li><b>良率低</b>：厚度不均、界面空隙都会放大单位成本。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="topic-card">
+            <div class="card-head">
+              <div class="card-title">2. 成本下降趋势：材料+工艺双线降本</div>
+              <div class="card-hint">核心变量=硫化物电解质 + 工程化良率 + 规模化产线</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-a">趋势</span> 单公斤 / 单Wh</div>
+                <div class="mini-head-cell"><span class="chip-b">机制</span> 为什么能降？</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>硫化物电解质：<b>2023年~8万元/公斤 → 2025年~1-2万元/公斤</b>。</li>
+                    <li>预测：2030年前后，成熟固态电芯BOM成本可压到约1元/Wh以内 (近液态1.5倍区间)。</li>
+                    <li>半固态/过渡型产品先量产，摊薄固定成本。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li><b>新合成路线</b> (砍原料价)。</li>
+                    <li><b>成膜/叠片一体化装备</b> (提良率)。</li>
+                    <li><b>GWh级产线放量</b> (规模效应)，告别“克级实验室手工艺”。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="topic-card">
+            <div class="card-head">
+              <div class="card-title">3. 不同下游的成本敏感度</div>
+              <div class="card-hint">谁先用得起？谁必须等便宜？</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-a">高容忍度</span> 先行落地</div>
+                <div class="mini-head-cell"><span class="chip-b">高敏感度</span> 暂难大规模</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li><b>消费电子</b>：电池占整机成本低 (~3%)，愿为续航+安全买单。</li>
+                    <li><b>豪华/高性能电动车</b>：溢价空间足，用“续航+安全”做卖点。</li>
+                    <li><b>航天/低空飞行器/特种装备</b>：性能 &gt; 成本。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li><b>大众型纯电汽车</b>：电池占整车成本30-40%，对电芯价格极敏感。</li>
+                    <li><b>电网/工商业储能</b>：核心指标=度电成本和寿命。固态暂无优势。</li>
+                    <li>→ 大众车&amp;储能会<strong>晚于</strong>消费电子/高端车。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="topic-card">
+            <div class="card-head">
+              <div class="card-title">4. 是否会全面替代液态锂电？</div>
+              <div class="card-hint">5-10年视角：更像“高性能补充”而不是“完全替代”</div>
+            </div>
+            <div class="mini-compare">
+              <div class="mini-head-row">
+                <div class="mini-head-cell"><span class="chip-a">中期现实</span> (未来5~10年)</div>
+                <div class="mini-head-cell"><span class="chip-b">长期可能性</span> (&gt;10年)</div>
+              </div>
+              <div class="mini-body-row">
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>固态将在<b>高价值细分市场</b> (豪华车/航空/军工) 率先量产。</li>
+                    <li>主流车/储能仍以液态为主。</li>
+                    <li>行业判断：<b>“半固态+液态”将长期并存</b>。</li>
+                  </ul>
+                </div>
+                <div class="mini-cell">
+                  <ul class="mini-list">
+                    <li>固态卖点 = <b>高能量密度 + 本征安全</b>。</li>
+                    <li>若成本差压到≈1.5倍以内，整车厂可能主动切换 (降低安全责任)。</li>
+                    <li>液态锂电仍在演进，两条路线将长期并行迭代。</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+        <footer class="note" style="margin-top: 0; font-size: calc(10px * var(--font-scale))">
+          <span class="note-strong">银行视角结论：</span>
+          固态电池是“高性能溢价产品 → 高端车/特种场景落地 → 降本+工艺固化 → 向大众车和储能外溢”。这是一个分场景逐层下沉的长周期产业升级。
+        </footer>
+        </div>
+
+      <div class="slide-page" id="page-8" data-title="潜在应用场景（需求侧）" style="touch-action: pan-y pinch-zoom">
+        <header class="page-head" style="padding-bottom: 0; margin-bottom: 0">
+          <h1 class="page-title" style="font-size: calc(24px * var(--font-scale))">
+            固态电池的潜在落地场景
+          </h1>
+          <div class="page-desc" style="font-size: calc(14px * var(--font-scale))">
+            固态电池的价值并不是“全面替代所有锂电池”，而是优先切入那些同时要求高比能（轻/长续航）和高安全（抗热失控）的场景，先在高附加值细分市场形成样板，再逐步向主流渗透。
+          </div>
+        </header>
+        <main class="grid-2x2 scenario">
+          <section class="scenario-card">
+            <h2 class="scenario-headline">动力电池（电动汽车）</h2>
+            <div class="scenario-body">
+              汽车领域对续航里程和安全性要求极高，是固态电池最重要的潜在市场之一。固态电池具备更高能量密度和更高安全性，契合高端新能源车的长续航、快补能和高热稳定需求。预计将从高端/豪华车型率先装车，随后向更大规模渗透。<br /><br />
+              <span class="progress-label">当前进展</span>
+              多家车企规划在2025～2028年小批量试装固态或半固态电池，用于路测和安全性验证（公开产业口径，含36kr 等披露）。
+            </div>
+          </section>
+          <section class="scenario-card">
+            <h2 class="scenario-headline">消费电子（手机 / 笔电）</h2>
+            <div class="scenario-body">
+              智能手机、笔电等消费电子希望在有限体积下进一步提升续航，同时降低鼓包/起火风险，因而对“高能量密度+高安全”电芯具备高接受度。由于电池成本在整机中占比低，更贵的固态/半固态电池更容易商业化。<br /><br />
+              <span class="progress-label">当前进展</span>
+              2024 年已有厂商公开发布搭载半固态电池的手机；头部终端品牌（含vivo等）已将“固态/半固态电池”作为卖点宣传，苹果、华为被多次传出在验证相关路线。
+            </div>
+          </section>
+          <section class="scenario-card">
+            <h2 class="scenario-headline">储能电站 / 电网侧储能</h2>
+            <div class="scenario-body">
+              电网调峰、可再生能源配储等场景更强调单位度电成本和全寿命周期次数，而不是极限能量密度。当前固态电池在循环寿命和成本方面尚无明显优势，磷酸铁锂液态电池依旧凭“便宜+耐久”占主导。<br /><br />
+              <span class="progress-label">当前判断</span>
+              固态电池短期内不具备储能侧性价比优势，渗透将是中长期事件，前提是寿命和成本改善。
+            </div>
+          </section>
+          <section class="scenario-card">
+            <h2 class="scenario-headline">新兴领域（eVTOL / 人形机器人）</h2>
+            <div class="scenario-body">
+              低空载人飞行器（eVTOL）、仿生人形机器人等新兴形态，对电池“更轻、更安全、更耐高低温”的要求非常激进，属于高比能+高可靠的极端场景。固态电池的高能量密度、宽温适应性，使其被视为关键使能技术，尤其是eVTOL。<br /><br />
+              <span class="progress-label">当前进展</span>
+              有电动飞行器公司提出在2025年前后完成固态/半固态电池在载人无人机上的测试认证，作为商业化示范。
+            </div>
+          </section>
+        </main>
+        <footer class="note">
+          注：上述时间表均为产业公开口径或主机厂规划目标，不代表已实现大规模商业交付。动力车载与航空级场景通常先采用“半固态”（少量液态电解质+固态电解质）作为过渡。
+              </footer>
+      </div>
+
+      <div class="slide-page" id="page-12" data-title="产业格局：国内 vs 国际企业">
+        <header class="page-head">
+          <div class="page-line1">
+            <h1 class="page-title" style="font-size: calc(19px * var(--font-scale))">固态电池：中国 vs 海外的产业力量</h1>
+          </div>
+          <div class="page-desc" style="font-size: calc(12px * var(--font-scale))">
+            <b>中国：</b>完整产业链 + 先量产再迭代 (半固态先行)。<br />
+            <b>海外：</b>老牌巨头 + 固态初创，“混编推进”全固态。
+          </div>
+        </header>
+        <main class="main-grid">
+          <section class="top-row">
+            <div class="section-card">
+              <div class="section-head">
+                <div class="section-left">
+                  <div class="section-title">中国企业格局 <span class="chip">产业链协同</span></div>
+                  <div class="region-tagline">龙头电池厂 + 创业公司 + 材料/设备全线投入</div>
+                </div>
+              </div>
+              <div class="section-body" style="font-size: calc(11px * var(--font-scale))">
+                <div class="col-split-2">
+                  <div class="sub-block">
+                    <div class="sub-head">电池&amp;整车侧</div>
+                    <ul class="bullet-list">
+                      <li><strong>龙头 (宁德/比亚迪/国轩/亿纬/中创)</strong> 已全部立项，主攻<strong>硫化物全固态</strong> (高比能)。</li>
+                      <li><strong>初创 (清陶/卫蓝)</strong> 走<strong>氧化物半固态</strong>过渡方案 (易加工/率先装车)。</li>
+                      <li>多家企业已公布半固态装车/中试时间表。</li>
+                    </ul>
+                  </div>
+                  <div class="sub-block">
+                    <div class="sub-head">材料&amp;设备侧</div>
+                    <ul class="bullet-list">
+                      <li><strong>恩捷/天赐</strong>：布局硫化物固态电解质。</li>
+                      <li><strong>天奈科技</strong>：碳纳米管导电剂 (固态电极重要添加剂)。</li>
+                      <li><strong>先导智能</strong>：开发干法电极、固态成膜/层压设备。</li>
+                      <li>已基本形成“材料-电芯-设备”全链条。</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section-card">
+              <div class="section-head">
+                <div class="section-left">
+                  <div class="section-title">海外企业格局 <span class="chip">路线并行</span></div>
+                  <div class="region-tagline">传统巨头+固态新创，押不同电解质体系</div>
+                </div>
+              </div>
+              <div class="section-body" style="font-size: calc(11px * var(--font-scale))">
+                <div class="col-split-2">
+                  <div class="sub-block">
+                    <div class="sub-head">车企 / 电池巨头</div>
+                    <ul class="bullet-list">
+                      <li><strong>日本：</strong>丰田 (硫化物, 专利多)；松下 (卤化物)。</li>
+                      <li><strong>韩国：</strong>LG/三星/SK 全面投入 (主攻硫化物/聚合物)。</li>
+                      <li><strong>欧洲：</strong>大众 (投QuantumScape), 宝马 (合作Solid Power)。</li>
+                    </ul>
+                  </div>
+                  <div class="sub-block">
+                    <div class="sub-head">固态初创公司</div>
+                    <ul class="bullet-list">
+                      <li><strong>QuantumScape (美)：</strong>氧化物 (获大众绑定)。</li>
+                      <li><strong>Solid Power (美)：</strong>硫化物 (与福特/宝马合作)。</li>
+                      <li><strong>Factorial Energy (美)：</strong>复合路线 (获奔驰/现代投资)。</li>
+                      <li>美国呈“多技术并行 + 车企战略投资”特征。</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="bottom-row">
+            <div class="section-card">
+              <div class="section-head">
+                <div class="section-left">
+                  <div class="section-title">潜在龙头判断 <span class="chip">谁最可能跑出来</span></div>
+                  <div class="region-tagline">看三件事：专利 / 工程化 / 车企绑定能力</div>
+                </div>
+              </div>
+              <div class="section-body" style="font-size: calc(11px * var(--font-scale))">
+                <div class="col-split-2">
+                  <div class="sub-block">
+                    <div class="sub-head">中国</div>
+                    <ul class="bullet-list">
+                      <li><strong>宁德时代：</strong>研发投入+产线复制能力最强。</li>
+                      <li><strong>比亚迪：</strong>电芯+整车一体化，或最快量产装车。</li>
+                      <li><strong>卫蓝/清陶：</strong>与蔚来/上汽深度合作，目标“率先上车”。</li>
+                      <li><strong>恩捷/天奈：</strong>有望成关键材料“卡脖子型”供应商。</li>
+                    </ul>
+                  </div>
+                  <div class="sub-block">
+                    <div class="sub-head">海外</div>
+                    <ul class="bullet-list">
+                      <li><strong>丰田：</strong>最有希望率先商业化硫化物全固态。</li>
+                      <li><strong>LGES / 三星SDI / 松下：</strong>传统巨头，最易推向全球车规认证。</li>
+                      <li><strong>QuantumScape / Solid Power：</strong>若通过车企耐久/安全测试，或成“新巨头”。</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+        <footer class="note" style="margin-top: 0; font-size: calc(10px * var(--font-scale))">
+          <span class="note-strong">结论：</span>
+          中国优势在“能把产线建起来并快速复制”；海外优势在“掌握关键专利并定义高端车卖点”。谁能稳定供货车规级产品，谁就是下一代标准制定者。
+        </footer>
+    </div> 
+    
+      <div class="slide-page" id="page-14" data-title="商业化展望与战略意义">
+        <header class="page-head">
+          <div class="page-line1">
+            <h1 class="page-title" style="font-size: calc(19px * var(--font-scale))">固态电池的商业化时间与战略意义</h1>
+            <div class="page-sub">（短期是卖点，中期是产业能力，长期是能源格局）</div>
+          </div>
+          <div class="page-desc" style="font-size: calc(12px * var(--font-scale))">
+            固态电池不会一夜“取代锂电”，而是沿：样品 → 半固态小批量 → 全固态高端搭载 → 成本下降 的路径逐步进入主流。
+          </div>
+        </header>
+        <main class="main-grid">
+          <section class="top-row">
+            <div class="section-card">
+              <div class="section-head">
+                <div class="section-left">
+                  <div class="section-title">商业化时间展望 <span class="chip">什么时候真能买到？</span></div>
+                  <div class="region-tagline">半固态先落地，全固态更慢</div>
+                </div>
+              </div>
+              <div class="section-body">
+                <ul class="bullet-list" style="font-size: calc(11px * var(--font-scale))">
+                  <li><strong>2025年前后：</strong>半固态电池在高端消费电子、示范车型上小规模商用 (作为卖点)。</li>
+                  <li><strong>2027-2030：</strong>全固态电池有望在少数高端车型上批量搭载 (丰田、宁德等头部公司时间表)。</li>
+                  <li><strong>量产爬坡：</strong>真正“上路可买”的固态车，激进估计5年，保守可能10年。</li>
+                  <li><strong>现实判断：</strong>2030年前，固态电池仍是高端配置，不会全面取代液态。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="section-card">
+              <div class="section-head">
+                <div class="section-left">
+                  <div class="section-title">战略替代意义 <span class="chip">为什么各国都在抢？</span></div>
+                  <div class="region-tagline">解决“安全+能量密度”双瓶颈</div>
+                </div>
+              </div>
+              <div class="section-body">
+                <ul class="bullet-list" style="font-size: calc(11px * var(--font-scale))">
+                  <li><strong>安全：</strong>固态电解质大幅降低热失控和起火风险，改善公众安全认知。</li>
+                  <li><strong>能量密度：</strong>可搭配高比容量负极 (金属锂等)，实现更高续航，缓解“里程焦虑”。</li>
+                  <li><strong>新场景：</strong>为eVTOL、人形机器人等高要求场景提供基础电源，使概念走向产业化。</li>
+                  <li><strong>产业博弈：</strong>被视为下一代电池标准。谁先量产、谁掌控专利，谁就在新能源产业链中占据战略主导权。</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section class="bottom-row">
+            <div class="section-card">
+              <div class="section-head">
+                <div class="section-left">
+                  <div class="section-title">结论 <span class="chip">未来10年的基本图景</span></div>
+                  <div class="region-tagline">固态电池不是“替换关系”，是“分层占位”</div>
+                </div>
+              </div>
+              <div class="section-body">
+                <ul class="bullet-list" style="font-size: calc(11px * var(--font-scale))">
+                  <li><strong>5-10年内：</strong>在高端电动车和高端消费电子中，作为“高安全+长续航”的差异化卖点。</li>
+                  <li><strong>10年以后：</strong>随成本下降，向主流车型和部分储能场景渗透。</li>
+                  <li><strong>并存阶段：</strong>固态 (高价值/高安全) + 液态 (低成本/大众市场) 将长期并行。</li>
+                  <li><strong>战略影响：</strong>谁能把固态电池稳定推到量产装车，谁就可能在新能源产业链中获得下一阶段的话语权。</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </main>
+        <footer class="note" style="margin-top: 0; font-size: calc(10px * var(--font-scale))">
+          <span class="note-strong">核心 takeaway：</span>
+          固态电池是下一个“安全+比能”平台型技术，商业化是渐进曲线。当前应视为高端场景的增量，而非对现有锂电的立即替换。
+        </footer>
+        </div>
+        
+      <!-- 尾页 -->
+      <div class="slide-page end-page" id="page-15" data-title="谢谢">
+        <main class="end-content">
+          <div class="end-decoration-top"></div>
+          <div class="end-main">
+            <h1 class="end-title">谢谢！</h1>
+          </div>
+          <div class="end-decoration-bottom"></div>
+        </main>
+      </div>
+        </div>
+        
+    <nav id="app-controls" aria-label="幻灯片控制器">
+      <div id="page-progress" aria-hidden="true"><span></span></div>
+      <div class="control-bar">
+        <div class="control-group">
+          <button id="btn-prev" type="button" title="上一页">‹ 上一页</button>
+        </div>
+        <div class="control-group" aria-live="polite">
+          <span id="page-indicator">1 / 16</span>
+          <span id="page-title-display" aria-live="polite">封面</span>
+        </div>
+        <div class="control-group">
+          <button id="btn-font-decrease" type="button" title="减小字体" class="font-control">A-</button>
+          <button id="btn-font-increase" type="button" title="增大字体" class="font-control">A+</button>
+          <button
+            id="btn-fullscreen"
+            type="button"
+            title="全屏展示幻灯片"
+            class="utility-button"
+            aria-pressed="false"
+          >
+            <span class="fullscreen-icon" aria-hidden="true">⤢</span>
+            <span class="fullscreen-text">全屏</span>
+          </button>
+          <button id="btn-next" type="button" title="下一页" style="margin-left: 12px">下一页 ›</button>
+        </div>
+        </div>
+    </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const issuanceEl = document.getElementById('cq-chart-issuance');
+        const balanceEl = document.getElementById('cq-chart-balance');
+        if (!window.echarts || !issuanceEl || !balanceEl) {
+          return;
+        }
+
+        const xAxisData = ['2020年', '2021年', '2022年', '2023年', '2024年', '2025年6月'];
+        const issuanceChart = echarts.init(issuanceEl);
+        const balanceChart = echarts.init(balanceEl);
+
+        issuanceChart.setOption({
+          grid: { left: 40, right: 52, top: 32, bottom: 36, containLabel: true },
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          legend: { bottom: 0, textStyle: { color: '#4b5563', fontFamily: 'PingFang SC, Microsoft YaHei, sans-serif' } },
+          xAxis: { type: 'category', data: xAxisData, axisTick: { alignWithLabel: true } },
+          yAxis: [
+            { type: 'value', name: '亿元' },
+            { type: 'value', name: '占比', axisLabel: { formatter: '{value}%' } },
+          ],
+          series: [
+            {
+              name: '制造业中长期余额',
+              type: 'bar',
+              data: [168.22, 189.08, 201.0, 227.52, 231.8, 231.46],
+              itemStyle: { color: '#f4d060' },
+              label: { show: true, position: 'top', formatter: ({ value }) => value.toFixed(2) },
+            },
+            {
+              name: '制造业余额',
+              type: 'bar',
+              data: [197.78, 196.93, 220.34, 227.52, 231.8, 232.01],
+              itemStyle: { color: '#7aa0f7' },
+              label: { show: true, position: 'top', formatter: ({ value }) => value.toFixed(2) },
+            },
+            {
+              name: '中长期占比',
+              type: 'line',
+              yAxisIndex: 1,
+              smooth: true,
+              data: [85.05, 96.01, 91.22, 100.0, 100.0, 99.76],
+              itemStyle: { color: '#ef4444' },
+              label: { show: true, formatter: '{c}%' },
+            },
+          ],
+        });
+
+        balanceChart.setOption({
+          grid: { left: 40, right: 52, top: 32, bottom: 36, containLabel: true },
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          legend: { bottom: 0, textStyle: { color: '#4b5563', fontFamily: 'PingFang SC, Microsoft YaHei, sans-serif' } },
+          xAxis: { type: 'category', data: xAxisData, axisTick: { alignWithLabel: true } },
+          yAxis: [
+            { type: 'value', name: '亿元' },
+            { type: 'value', name: '占比', axisLabel: { formatter: '{value}%' } },
+          ],
+          series: [
+            {
+              name: '制造业中长期',
+              type: 'bar',
+              data: [70.2, 107.02, 80.5, 89.47, 76.08, 52.48],
+              itemStyle: { color: '#f4d060' },
+              label: { show: true, position: 'top', formatter: ({ value }) => value.toFixed(2) },
+            },
+            {
+              name: '制造业',
+              type: 'bar',
+              data: [125.59, 114.87, 99.84, 103.27, 76.08, 53.03],
+              itemStyle: { color: '#7aa0f7' },
+              label: { show: true, position: 'top', formatter: ({ value }) => value.toFixed(2) },
+            },
+            {
+              name: '中长期占比',
+              type: 'line',
+              yAxisIndex: 1,
+              smooth: true,
+              data: [55.9, 93.17, 80.63, 86.64, 100.0, 98.96],
+              itemStyle: { color: '#ef4444' },
+              label: { show: true, formatter: '{c}%' },
+            },
+          ],
+        });
+
+        const charts = [issuanceChart, balanceChart];
+        let resizeTimer = null;
+        function resizeCharts() {
+          window.clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(() => {
+            charts.forEach((chart) => {
+              chart.resize();
+            });
+          }, 80);
+        }
+
+        window.addEventListener('resize', resizeCharts);
+        const stage = document.getElementById('slide-stage');
+        if (window.ResizeObserver && stage) {
+          const ro = new ResizeObserver(resizeCharts);
+          ro.observe(stage);
+        }
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const STORAGE_KEY = 'solidDeckState';
+            let currentPage = 0;
+        let totalPages = 0;
+        let manualFontScale = 1.0;
+        let baseFontScale = 1.0;
+        let layoutCompression = 1.0;
+        const pageFontScales = new Map();
+
+            const pages = document.querySelectorAll('.slide-page');
+        totalPages = pages.length;
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const pageIndicator = document.getElementById('page-indicator');
+            const pageTitleDisplay = document.getElementById('page-title-display');
+            const btnFontIncrease = document.getElementById('btn-font-increase');
+            const btnFontDecrease = document.getElementById('btn-font-decrease');
+            const btnFullscreen = document.getElementById('btn-fullscreen');
+        const stage = document.getElementById('slide-stage');
+        const deckContainer = document.querySelector('.slide-deck-container');
+        const appControls = document.getElementById('app-controls');
+        const rootElement = document.documentElement;
+        const progressBar = document.querySelector('#page-progress span');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const fullscreenSupported =
+          typeof document.fullscreenEnabled === 'boolean'
+            ? document.fullscreenEnabled
+            : typeof document.documentElement?.requestFullscreen === 'function' ||
+              typeof document.documentElement?.webkitRequestFullscreen === 'function';
+        let resizeTimer = null;
+        let compressionFrame = null;
+
+        function normalizeFontScale(value) {
+          if (typeof value !== 'number' || Number.isNaN(value)) {
+            return 1;
+          }
+          return Math.max(0.6, Math.min(1.8, value));
+        }
+
+        function ensurePageFontScale(page) {
+          if (!pageFontScales.has(page)) {
+            pageFontScales.set(page, 1);
+          }
+          return pageFontScales.get(page);
+        }
+
+        function restoreState() {
+          try {
+            const cached = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            if (cached) {
+              if (cached.page && cached.page >= 0 && cached.page < totalPages) {
+                currentPage = cached.page;
+              }
+              if (cached.fontScales && typeof cached.fontScales === 'object') {
+                Object.entries(cached.fontScales).forEach(([key, value]) => {
+                  const page = Number(key);
+                  if (
+                    Number.isFinite(page) &&
+                    page >= 0 &&
+                    page < totalPages &&
+                    typeof value === 'number'
+                  ) {
+                    pageFontScales.set(page, normalizeFontScale(value));
+                  }
+                });
+              } else if (typeof cached.fontScale === 'number') {
+                const legacyScale = normalizeFontScale(cached.fontScale);
+                for (let page = 0; page < totalPages; page += 1) {
+                  pageFontScales.set(page, legacyScale);
+                }
+              }
+            }
+          } catch (error) {
+            console.warn('无法恢复本地状态', error);
+          }
+
+          manualFontScale = ensurePageFontScale(currentPage);
+        }
+
+        function persistState() {
+          try {
+            const fontScalesPayload = {};
+            pageFontScales.forEach((value, page) => {
+              if (page >= 0 && page < totalPages) {
+                fontScalesPayload[page] = normalizeFontScale(value);
+              }
+            });
+            localStorage.setItem(
+              STORAGE_KEY,
+              JSON.stringify({
+                page: currentPage,
+                fontScale: manualFontScale,
+                fontScales: fontScalesPayload,
+              })
+            );
+          } catch (error) {
+            console.warn('无法写入本地状态', error);
+          }
+        }
+
+        function updateProgress() {
+          const ratio = totalPages > 1 ? currentPage / (totalPages - 1) : 0;
+          const width = `${Math.max(0, Math.min(1, ratio)) * 100}%`;
+          if (progressBar) {
+            progressBar.style.width = width;
+          }
+        }
+
+        function applyFontScale() {
+          manualFontScale = normalizeFontScale(manualFontScale);
+          pageFontScales.set(currentPage, manualFontScale);
+          layoutCompression = Math.max(0.5, Math.min(1, layoutCompression || 1));
+          const rawScale = baseFontScale * manualFontScale * layoutCompression;
+          const effectiveScale = Math.max(0.68, Math.min(2.1, rawScale));
+          rootElement.style.setProperty('--font-scale', effectiveScale.toFixed(3));
+          const densityScale = Math.max(0.78, Math.min(1.08, effectiveScale));
+          rootElement.style.setProperty('--density-scale', densityScale.toFixed(3));
+          btnFontDecrease.disabled = manualFontScale <= 0.6;
+          btnFontIncrease.disabled = manualFontScale >= 1.8;
+        }
+
+        function scheduleCompression() {
+          if (compressionFrame !== null) {
+            cancelAnimationFrame(compressionFrame);
+          }
+          compressionFrame = requestAnimationFrame(() => {
+            compressionFrame = null;
+            measureLayoutCompression();
+          });
+        }
+
+        function measureLayoutCompression() {
+          if (!stage) {
+            layoutCompression = 1;
+            applyFontScale();
+            return;
+          }
+
+          const activePage = document.getElementById(`page-${currentPage}`);
+          if (!activePage) {
+            layoutCompression = 1;
+            applyFontScale();
+            return;
+          }
+
+          const availableHeight = stage.clientHeight - 4;
+          if (availableHeight <= 0) {
+            layoutCompression = 1;
+            applyFontScale();
+            return;
+          }
+
+          layoutCompression = 1;
+          applyFontScale();
+          activePage.getBoundingClientRect();
+
+          let contentHeight = activePage.scrollHeight;
+          if (contentHeight <= availableHeight) {
+            layoutCompression = 1;
+            applyFontScale();
+            return;
+          }
+
+          const minCompression = 0.5;
+          let low = minCompression;
+          let high = 1;
+          let best = null;
+
+          for (let i = 0; i < 8; i += 1) {
+            const mid = (low + high) / 2;
+            layoutCompression = mid;
+            applyFontScale();
+            activePage.getBoundingClientRect();
+            contentHeight = activePage.scrollHeight;
+
+            if (contentHeight <= availableHeight) {
+              best = mid;
+              high = mid - 0.005;
+                } else {
+              low = mid + 0.005;
+            }
+          }
+
+          layoutCompression = Math.max(
+            minCompression,
+            Math.min(1, best ?? minCompression)
+          );
+          applyFontScale();
+          activePage.getBoundingClientRect();
+        }
+
+        function resolveStageMaxWidth() {
+          if (!stage) {
+            return 1280;
+          }
+          const attrValue = parseFloat(stage.getAttribute('data-max-width'));
+          if (!Number.isNaN(attrValue) && attrValue > 0) {
+            return attrValue;
+          }
+          const cssValue = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue('--stage-max-width')
+          );
+          return Number.isFinite(cssValue) && cssValue > 0 ? cssValue : 1280;
+        }
+
+        function resizeStage() {
+          if (!stage) {
+            applyFontScale();
+                    return;
+                }
+                
+          const aspectRatio = 16 / 9;
+          const fullscreen = isFullscreenActive();
+          let controlsHeight = fullscreen ? 0 : appControls?.offsetHeight ?? 0;
+          const bodyStyles = window.getComputedStyle(document.body);
+          const paddingLeft = parseFloat(bodyStyles.paddingLeft) || 0;
+          const paddingRight = parseFloat(bodyStyles.paddingRight) || 0;
+          const paddingTop = parseFloat(bodyStyles.paddingTop) || 0;
+          const paddingBottom = parseFloat(bodyStyles.paddingBottom) || 0;
+
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+
+          const horizontalInset = fullscreen ? 0 : paddingLeft + paddingRight;
+          const topInset = fullscreen ? 0 : paddingTop;
+          const stageLimit = fullscreen ? Number.POSITIVE_INFINITY : resolveStageMaxWidth();
+
+          const availableWidth = Math.max(viewportWidth - horizontalInset, 320);
+          let stageWidth = Math.min(stageLimit, availableWidth);
+          let stageHeight = stageWidth / aspectRatio;
+
+          for (let i = 0; i < 2; i += 1) {
+            const bottomAllowance = fullscreen
+              ? 0
+              : Math.max(paddingBottom, controlsHeight + 24);
+            const availableHeight = Math.max(
+              viewportHeight - topInset - bottomAllowance,
+              220
+            );
+
+            stageWidth = Math.min(stageLimit, availableWidth);
+            stageHeight = stageWidth / aspectRatio;
+
+            if (stageHeight > availableHeight) {
+              stageHeight = availableHeight;
+              stageWidth = stageHeight * aspectRatio;
+            }
+
+            if (!Number.isFinite(stageWidth) || stageWidth <= 0) {
+              stageWidth = Math.min(availableWidth, stageLimit);
+              stageHeight = stageWidth / aspectRatio;
+            }
+
+            stageWidth = Math.max(320, Math.min(stageWidth, availableWidth));
+            stageHeight = stageWidth / aspectRatio;
+
+            if (fullscreen) {
+              break;
+            }
+
+            const recalculatedControlsHeight = appControls?.offsetHeight ?? 0;
+            if (Math.abs(recalculatedControlsHeight - controlsHeight) < 2) {
+              break;
+            }
+            controlsHeight = recalculatedControlsHeight;
+          }
+
+          stage.style.width = `${stageWidth}px`;
+          stage.style.height = `${stageHeight}px`;
+
+          rootElement.style.setProperty('--stage-width', `${stageWidth}px`);
+          rootElement.style.setProperty('--stage-height', `${stageHeight}px`);
+
+          const dimensionScale = Math.min(stageWidth / 1280, stageHeight / 720);
+          const bonus = dimensionScale >= 1 ? 0.1 : 0;
+          baseFontScale = Math.max(0.9, Math.min(1.9, dimensionScale * 1.25 + bonus));
+          layoutCompression = 1;
+          applyFontScale();
+          scheduleCompression();
+        }
+
+            function showPage(pageNumber) {
+                if (pageNumber < 0 || pageNumber >= totalPages) {
+                    return;
+                }
+                
+                currentPage = pageNumber;
+          manualFontScale = ensurePageFontScale(currentPage);
+          applyFontScale();
+                pages.forEach((page, index) => {
+            const isActive = index === currentPage;
+            page.classList.toggle('active', isActive);
+            page.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+            page.setAttribute('tabindex', isActive ? '0' : '-1');
+            if (isActive) {
+              page.scrollTop = 0;
+            }
+          });
+
+          if (pageIndicator) {
+                pageIndicator.textContent = `${currentPage + 1} / ${totalPages}`;
+          }
+          const activePage = document.getElementById(`page-${currentPage}`);
+          if (pageTitleDisplay) {
+            pageTitleDisplay.textContent = activePage?.getAttribute('data-title') ?? '';
+          }
+
+          btnPrev.disabled = currentPage === 0;
+          btnNext.disabled = currentPage === totalPages - 1;
+
+          updateProgress();
+
+          scheduleCompression();
+          persistState();
+
+          if (!prefersReducedMotion) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+                window.scrollTo(0, 0);
+          }
+        }
+
+        function goToPrevious() {
+          if (currentPage > 0) {
+            showPage(currentPage - 1);
+          }
+        }
+
+        function goToNext() {
+          if (currentPage < totalPages - 1) {
+            showPage(currentPage + 1);
+          }
+        }
+
+        function isFullscreenActive() {
+          return Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+        }
+
+        function updateFullscreenButton() {
+          if (!btnFullscreen) return;
+          const active = isFullscreenActive();
+          btnFullscreen.setAttribute('aria-pressed', String(active));
+          btnFullscreen.title = active ? '退出全屏模式' : '全屏展示幻灯片';
+          const iconEl = btnFullscreen.querySelector('.fullscreen-icon');
+          if (iconEl) {
+            iconEl.textContent = active ? '⤡' : '⤢';
+          }
+          const textEl = btnFullscreen.querySelector('.fullscreen-text');
+          if (textEl) {
+            textEl.textContent = active ? '退出全屏' : '全屏';
+          }
+          document.body.classList.toggle('fullscreen-active', active);
+          requestAnimationFrame(resizeStage);
+        }
+
+        function requestFullscreen(target) {
+          if (target?.requestFullscreen) {
+            target.requestFullscreen().catch(() => {
+              updateFullscreenButton();
+            });
+          } else if (target?.webkitRequestFullscreen) {
+            target.webkitRequestFullscreen();
+          }
+        }
+
+        function exitFullscreen() {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {
+              updateFullscreenButton();
+            });
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+        }
+
+        function toggleFullscreen() {
+          if (!fullscreenSupported) {
+            return;
+          }
+
+          if (isFullscreenActive()) {
+            exitFullscreen();
+                } else {
+            requestFullscreen(stage ?? deckContainer ?? document.documentElement);
+          }
+        }
+
+        function scheduleResize() {
+          window.clearTimeout(resizeTimer);
+          resizeTimer = window.setTimeout(() => {
+            resizeStage();
+          }, 80);
+        }
+
+        btnPrev.addEventListener('click', goToPrevious);
+        btnNext.addEventListener('click', goToNext);
+
+        btnFontIncrease.addEventListener('click', () => {
+          manualFontScale = normalizeFontScale(manualFontScale + 0.1);
+          pageFontScales.set(currentPage, manualFontScale);
+          applyFontScale();
+          scheduleCompression();
+          persistState();
+        });
+
+        btnFontDecrease.addEventListener('click', () => {
+          manualFontScale = normalizeFontScale(manualFontScale - 0.1);
+          pageFontScales.set(currentPage, manualFontScale);
+          applyFontScale();
+          scheduleCompression();
+          persistState();
+        });
+
+        window.addEventListener('resize', scheduleResize);
+        window.addEventListener('orientationchange', scheduleResize);
+
+        document.addEventListener('keydown', (event) => {
+          const tag = event.target?.tagName?.toLowerCase();
+          if (tag === 'input' || tag === 'textarea' || event.defaultPrevented) {
+            return;
+          }
+          if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+            goToNext();
+          } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+            goToPrevious();
+          }
+        });
+
+        let touchStartX = null;
+        let touchStartY = null;
+
+        document.addEventListener(
+          'touchstart',
+          (event) => {
+            const touch = event.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+          },
+          { passive: true }
+        );
+
+        document.addEventListener(
+          'touchend',
+          (event) => {
+            if (touchStartX == null || touchStartY == null) return;
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 80) {
+              if (deltaX < 0) {
+                goToNext();
+              } else {
+                goToPrevious();
+              }
+            }
+            touchStartX = touchStartY = null;
+          },
+          { passive: true }
+        );
+
+        if (btnFullscreen) {
+          if (!fullscreenSupported) {
+            btnFullscreen.disabled = true;
+            btnFullscreen.title = '当前浏览器不支持全屏模式';
+          } else {
+            btnFullscreen.addEventListener('click', toggleFullscreen);
+            document.addEventListener('fullscreenchange', updateFullscreenButton);
+            document.addEventListener('fullscreenerror', updateFullscreenButton);
+            document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+            document.addEventListener('webkitfullscreenerror', updateFullscreenButton);
+            updateFullscreenButton();
+          }
+        }
+
+        restoreState();
+        showPage(currentPage);
+        resizeStage();
+        });
+    </script>
+</body>
+</html>
